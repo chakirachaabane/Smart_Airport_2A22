@@ -5,6 +5,7 @@
 #include<QTimeEdit>
 #include<QSqlQuery>
 #include<QSqlQueryModel>
+#include<QTableView>
 
 class Vols
 {
@@ -28,6 +29,7 @@ private :
     void setvoyageurs(int n) ;
     void setmatricule(QString n);
 
+
     int get_identifiant() ;
     QString get_destination();
     QDate get_date();
@@ -40,8 +42,13 @@ private :
     QSqlQueryModel * afficher();
     bool supprimer(int);
     bool modifier(int,QString,int,float,QDate,QTime,QTime,QString);
-
-
+    QSqlQueryModel * recherche_id(int);
+    QSqlQueryModel * recherche_destination(QString);
+    QSqlQueryModel * recherche_matricule(QString);
+    QSqlQueryModel * trie_prix();
+    QSqlQueryModel * trie_date();
+    QSqlQueryModel * trie_voyageurs();
+    QSqlQueryModel*  rechercherDate(QDate);
 };
 
 #endif // VOLS_H
