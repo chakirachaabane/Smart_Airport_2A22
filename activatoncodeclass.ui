@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ActivatonCodeClass</class>
+ <widget class="QDialog" name="ActivatonCodeClass">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>407</width>
+    <height>232</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">*{
+	
+	font: 75 italic 13pt &quot;Century Schoolbook&quot;;
+	
+
+}
+
+
+
+
+
+
+QWidget#g_employe{background:qlineargradient(spread:pad, x1:0.5, y1:0, x2:1, y2:0.5, stop:0 #7CD5F3, stop:1 #3CB0CD)}
+
+QFrame#frame{background:qlineargradient(spread:pad, x1:0.5, y1:0, x2:1, y2:0.5, stop:0 #7CD5F3, stop:1 #3CB0CD)}
+
+QPushButton
+{
+  background:qlineargradient(spread:pad, x1:0.5, y1:0, x2:0.5, y2:1, stop:0 rgba(33, 192, 99, 255), stop:1 rgba(255, 255, 255, 255));
+  border-radius:15px;
+  border-style:solid;
+ border-width: 1px;
+ border-color:#08485E;
+ font-family:century gothic;
+   font-size:18px;
+}
+
+
+QPushButton:hover
+{
+  color:#333;
+  border-radius:15px;
+  background:#1BEE9A;
+}
+QTabBar::tab {
+    color: #0C5A23;
+    border: 1px solid #08485E;
+    border-bottom-style: none;
+    background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #1BEE9A, stop:.4 #1BEE9A);
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 3px;
+    padding-bottom: 2px;
+    margin-right: -1px;
+    border-top-right-radius:3px;
+}
+
+QTabWidget::pane {
+    border: 3px solid #7CD5F3;
+    top: 1px;
+    
+}
+
+QTabBar::tab:last
+{
+    margin-right: 0; /* the last selected tab has nothing to overlap with on the right */
+    border-top-right-radius: 10px;
+}
+
+QTabBar::tab:first:!selected
+{
+ margin-left: 0px; /* the last selected tab has nothing to overlap with on the right */
+
+
+    border-top-left-radius: 3px;
+}
+
+QTabBar::tab:!selected
+{
+    color:#08485E;
+    border-bottom-style: solid;
+    margin-top: 3px;
+    background-color: QLinearGradient(x1:0, y1:0, x2:0, y2:1, stop:1 #ADFFBC, stop:.4 #21C036);
+}
+QTabBar::tab:selected
+{
+     border-top-right-radius: 10px;
+
+ }
+
+
+</string>
+  </property>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>-1</x>
+     <y>0</y>
+     <width>411</width>
+     <height>231</height>
+    </rect>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>60</y>
+      <width>151</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>entrer le code:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="le_code">
+    <property name="geometry">
+     <rect>
+      <x>102</x>
+      <y>90</y>
+      <width>161</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>142</x>
+      <y>120</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>submit</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
