@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    ui->lineEdit_ID->setValidator(new QIntValidator(0, 9999999, this));
+    //ui->lineEdit_ID->setValidator(new QIntValidator(0, 9999999, this));
     ui->lineEdit_age->setValidator(new QIntValidator(0, 99, this));
     ui->lineEdit_tel->setValidator(new QIntValidator(0, 99999999, this));
     ui->lineEdit_nom->setValidator(new QRegExpValidator(QRegExp("[A-Z,a-z]*")));
@@ -22,6 +22,16 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tab_employe->setModel(e.afficher());
     ui->stackedWidget->setCurrentIndex(0);
 
+    //arduino
+    int ret=A.connect_arduino(); // lancer la connexion à arduino
+        switch(ret){
+        case(0):qDebug()<< "arduino is available and connected to : "<< A.getarduino_port_name();
+            break;
+        case(1):qDebug() << "arduino is available but not connected to :" <<A.getarduino_port_name();
+           break;
+        case(-1):qDebug() << "arduino is not available";
+        }
+         QObject::connect(A.getserial(),SIGNAL(readyRead()),this,SLOT(onMsg())); // permet de lancer
 
 
 
@@ -69,9 +79,9 @@ void MainWindow::on_pushButton_ajouter_clicked()
     else
        {role="employe";}
     QString mdp=ui->lineEdit_mdp->text();
+    QString carte=ui->lineEdit_carte->text();
 
-
-    Employee E(tel,nom,prenom,mail,mdp,role,id,age);
+    Employee E(tel,nom,prenom,mail,mdp,role,id,age,carte);
     QMessageBox msg;
     test=controlesaisi();
     if(test)
@@ -150,9 +160,9 @@ void MainWindow::on_modifier_e_clicked()
         else
            {role="employe";}
         QString mdp=ui->lineEdit_mdp->text();
+        QString carte=ui->lineEdit_carte->text();
 
-
-        Employee E(tel,nom,prenom,mail,mdp,role,id,age);
+        Employee E(tel,nom,prenom,mail,mdp,role,id,age,carte);
         QMessageBox msg;
         test=controlesaisi();
         if(test)
@@ -319,4 +329,50 @@ void MainWindow::on_sign_in_clicked()
 void MainWindow::on_quitter_button_clicked()
 {
  ui->stackedWidget->setCurrentIndex(0);
+}
+void MainWindow::onMsg()
+{
+
+    while(A.getserial()->canReadLine())
+       {//partie input
+           data=A.getserial()->readLine();
+           data.chop(2);
+
+
+           char* a=data.data();QString b=a;
+           QString data_inf="";
+           for(int i=2;i<b.length();i++)
+               data_inf+=a[i];
+
+           QString role;
+           QString nom=A.chercher(data_inf,&role);
+           QMessageBox msg;
+
+           qDebug()<<"Data Received: " <<data;
+           //partie output
+           if(data.split(':')[0] == "s")
+                  {
+                      if(data.split(':')[1] == "-1")
+                      {
+                         qDebug()<< "Not Detected"; // si les données reçues de arduino via la liaison série sont égales à 1
+                         //msg.setText("erreur de scan!!!!!!");msg.exec();
+
+                      }
+                      else
+                      {msg.setText("card scanned successfully!!!!!!");msg.exec();} // si les données reçues de arduino via la liaison série sont égales à 1
+                      if(nom!="")
+                          qDebug()<<role;
+                      if(role=="admin")
+                        {ui->stackedWidget->setCurrentIndex(1);nom+=" welcome";
+                         msg.setText(nom);msg.exec();
+                        }
+                       else {if(role=="employe")
+                                {ui->stackedWidget->setCurrentIndex(2);nom+=" welcome";
+                                 msg.setText(nom);msg.exec();}
+                             else
+                                msg.setText("id nexiste pas !!!!!!");msg.exec();
+                            }
+                  }
+
+    }
 }

@@ -7,14 +7,14 @@
 
 class Employee
 {
-    QString prenom,nom,mdp,mail,role;
+    QString prenom,nom,mdp,mail,role,id_carte;
     int tel,id,age;
 
 public:
     Employee();
-    Employee(int ,QString,QString,QString,QString,QString,int,int);
+    Employee(int ,QString,QString,QString,QString,QString,int,int,QString);
 
-
+    QString get_id_carte(){return id_carte;}
     QString get_nom(){return  nom;}
     int get_age(){return  age;}
     QString get_prenom(){return prenom;}

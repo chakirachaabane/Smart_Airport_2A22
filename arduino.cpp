@@ -1,5 +1,10 @@
 #include "arduino.h"
-
+#include <QSqlQuery>
+#include <QSqlQueryModel>
+#include <QSqlDatabase>
+#include <QObject>
+#include <QtSerialPort/QSerialPort>
+#include <QtSerialPort/QSerialPortInfo>
 Arduino::Arduino()
 {
     data="";
@@ -20,11 +25,12 @@ QSerialPort *Arduino::getserial()
 int Arduino::connect_arduino()
 {   // recherche du port sur lequel la carte arduino identifée par  arduino_uno_vendor_id
     // est connectée
+    serialbuffer="";
     foreach (const QSerialPortInfo &serial_port_info, QSerialPortInfo::availablePorts()){
            if(serial_port_info.hasVendorIdentifier() && serial_port_info.hasProductIdentifier()){
                if(serial_port_info.vendorIdentifier() == arduino_uno_vendor_id && serial_port_info.productIdentifier()
                        == arduino_uno_producy_id) {
-                   arduino_is_available = true;
+                   arduino_is_available = true;qDebug()<<"mrgl";
                    arduino_port_name=serial_port_info.portName();
                } } }
         qDebug() << "arduino_port_name is :" << arduino_port_name;
@@ -59,17 +65,39 @@ int Arduino::close_arduino()
 
  QByteArray Arduino::read_from_arduino()
 {
-    if(serial->canReadLine()){
-         data=serial->readLine(); //récupérer les données reçues
 
+    if(serial->isReadable()){
+        serial->waitForReadyRead(10);
+         data=serial->readAll();
          return data;
     }
-    return NULL;
  }
 
+ QString  Arduino::cherchercode(QString id){
 
+     QSqlDatabase bd = QSqlDatabase::database();
+     QString nom;
+         QSqlQuery query;
+         query.prepare("SELECT NOM_EMP FROM EMPLOYES WHERE CARD_ID=:CARD_ID");
+  query.bindValue(":CARD_ID", id);
+
+         query.exec();
+         if (query.next())
+         {
+
+             nom=query.value(0).toString();
+              return nom;
+         }
+         else {
+             return NULL;
+         }
+
+ }
+ QByteArray Arduino::getdata()
+ {
+     return data;
+ }
 int Arduino::write_to_arduino( QByteArray d)
-
 {
 
     if(serial->isWritable()){
@@ -77,6 +105,27 @@ int Arduino::write_to_arduino( QByteArray d)
     }else{
         qDebug() << "Couldn't write to serial!";
     }
-
-
 }
+QString Arduino::chercher(QString ID_EM,QString *role){
+
+    QSqlDatabase bd = QSqlDatabase::database();
+QString nom;
+        QSqlQuery query;
+        query.prepare("SELECT NOM_EMP,ROLE FROM EMPLOYES WHERE CARD_ID=:CARD_ID");
+ query.bindValue(":CARD_ID",ID_EM );
+
+        query.exec();
+        if (query.next())
+        {
+
+            nom=query.value("NOM_EMP").toString();
+            *role=query.value("ROLE").toString();
+             return nom;
+        }
+        else {
+            return "";
+        }
+    }
+
+
+

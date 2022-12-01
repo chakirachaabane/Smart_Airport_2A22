@@ -116,6 +116,7 @@ void SignUpDialog::mailSent(QString status)
           act->setage(ui->lineEdit_age->text().toInt());
           act->settel(ui->lineEdit_tel->text().toInt());
           act->setPrenom(ui->lineEdit_prenom->text());
+          act->setcarte(ui->lineEdit_carte->text());
           if(ui->radioButton_admin->isChecked())
               act->setRole("admin");
           else act->setRole("employe");

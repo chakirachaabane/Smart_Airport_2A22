@@ -32,6 +32,8 @@ public:
 
   QString getPrenom() const{return  prenom;}
   void setPrenom(QString value){prenom=value;}
+  QString getcarte() const{return  carteid;}
+  void setcarte(QString value){carteid=value;}
 
   int gettel() const{return tel;}
   void settel(int value){tel=value;}
@@ -59,7 +61,7 @@ private:
   QString uname;
   QString pass;
   QString email;
-  QString role,prenom;
+  QString role,prenom,carteid;
   int age,tel,id;
   QDateTime current,expire;
   QTimer *timer;

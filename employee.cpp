@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QMessageBox>
 
-Employee::Employee(int tel,QString n,QString p,QString mail,QString mdp,QString role,int id,int age)
+Employee::Employee(int tel,QString n,QString p,QString mail,QString mdp,QString role,int id,int age,QString id_c)
 {
     this->tel=tel;
     nom=n;
@@ -14,6 +14,7 @@ Employee::Employee(int tel,QString n,QString p,QString mail,QString mdp,QString 
     this->role=role;
     this->id=id;
     this->age=age;
+    this->id_carte=id_c;
 
 }
 
@@ -26,6 +27,7 @@ Employee::Employee()
   age=1;
   mail=" ";
   role=" ";
+  id_carte=" ";
 
 }
 
@@ -35,8 +37,8 @@ bool Employee::ajouter()
     QString tel_str=QString::number(tel);
     QString age_str=QString::number(age);
     QSqlQuery query;
-          query.prepare("INSERT INTO EMPLOYES(CIN_EMPLOYE,NOM_EMP,PRENOM_EMP,NUMERO_TELEPHONE,AGE_EMP,ADRESSE_MAIL,MOT_DE_PASSE,ROLE) "
-                        "VALUES (:CIN_EMPLOYE,:NOM_EMP,:PRENOM_EMP,:NUMERO_TELEPHONE,:AGE_EMP,:ADRESSE_MAIL,:MOT_DE_PASSE,:ROLE)");
+          query.prepare("INSERT INTO EMPLOYES(CIN_EMPLOYE,NOM_EMP,PRENOM_EMP,NUMERO_TELEPHONE,AGE_EMP,ADRESSE_MAIL,MOT_DE_PASSE,ROLE,CARD_ID) "
+                        "VALUES (:CIN_EMPLOYE,:NOM_EMP,:PRENOM_EMP,:NUMERO_TELEPHONE,:AGE_EMP,:ADRESSE_MAIL,:MOT_DE_PASSE,:ROLE,:CARD_ID)");
           query.bindValue(":CIN_EMPLOYE",id_str);
           query.bindValue(":NOM_EMP",nom);
           query.bindValue(":PRENOM_EMP", prenom);
@@ -45,6 +47,7 @@ bool Employee::ajouter()
           query.bindValue(":ADRESSE_MAIL",mail);
           query.bindValue(":MOT_DE_PASSE",mdp);
           query.bindValue(":ROLE",role);
+          query.bindValue(":CARD_ID",id_carte);
 
 
          return query.exec();
@@ -62,6 +65,7 @@ bool Employee::ajouter()
      model->setHeaderData(6, Qt::Horizontal, QObject::tr("mot de passe"));
      model->setHeaderData(7, Qt::Horizontal, QObject::tr("role"));
      model->setHeaderData(5, Qt::Horizontal, QObject::tr("mail"));
+     model->setHeaderData(8, Qt::Horizontal, QObject::tr("Carte id"));
 
 
      return  model;
@@ -72,7 +76,7 @@ bool Employee::ajouter()
      QString tel_str=QString::number(tel);
      QString age_str=QString::number(age);
      QSqlQuery query;
-           query.prepare("UPDATE employes SET NOM_EMP=:NOM_EMP,PRENOM_EMP=:PRENOM_EMP,NUMERO_TELEPHONE=:NUMERO_TELEPHONE,AGE_EMP=:AGE_EMP,ADRESSE_MAIL=:ADRESSE_MAIL,MOT_DE_PASSE=:MOT_DE_PASSE,ROLE=:ROLE WHERE CIN_EMPLOYE=:CIN_EMPLOYE");
+           query.prepare("UPDATE employes SET NOM_EMP=:NOM_EMP,PRENOM_EMP=:PRENOM_EMP,NUMERO_TELEPHONE=:NUMERO_TELEPHONE,AGE_EMP=:AGE_EMP,ADRESSE_MAIL=:ADRESSE_MAIL,MOT_DE_PASSE=:MOT_DE_PASSE,ROLE=:ROLE,CARD_ID=:CARD_ID WHERE CIN_EMPLOYE=:CIN_EMPLOYE");
            query.bindValue(":CIN_EMPLOYE",i);
            query.bindValue(":NOM_EMP",nom);
            query.bindValue(":PRENOM_EMP", prenom);
@@ -81,7 +85,7 @@ bool Employee::ajouter()
            query.bindValue(":ADRESSE_MAIL",mail);
            query.bindValue(":MOT_DE_PASSE",mdp);
            query.bindValue(":ROLE",role);
-
+           query.bindValue(":CARD_ID",id_carte);
      if(i!=0 || tel !=0 || age!=0 || prenom!="" || nom!="" || mail!="" || mdp!="")
           return query.exec();
      return 0;
@@ -102,11 +106,11 @@ bool Employee::ajouter()
      QSqlQueryModel * model= new QSqlQueryModel();
      qDebug()<<x<<endl;
      if(x=="nom")
-         model->setQuery("select CIN_EMPLOYE,NOM_EMP,PRENOM_EMP,NUMERO_TELEPHONE,AGE_EMP,ADRESSE_MAIL,MOT_DE_PASSE,ROLE from EMPLOYES order by NOM_EMP");
+         model->setQuery("select CIN_EMPLOYE,NOM_EMP,PRENOM_EMP,NUMERO_TELEPHONE,AGE_EMP,ADRESSE_MAIL,MOT_DE_PASSE,ROLE,CARD_ID from EMPLOYES order by NOM_EMP");
      else if(x=="prenom")
-         model->setQuery("select CIN_EMPLOYE,NOM_EMP,PRENOM_EMP,NUMERO_TELEPHONE,AGE_EMP,ADRESSE_MAIL,MOT_DE_PASSE,ROLE from employes order by PRENOM_EMP");
+         model->setQuery("select CIN_EMPLOYE,NOM_EMP,PRENOM_EMP,NUMERO_TELEPHONE,AGE_EMP,ADRESSE_MAIL,MOT_DE_PASSE,ROLE,CARD_ID from employes order by PRENOM_EMP");
      else if (x=="id")
-         model->setQuery("select CIN_EMPLOYE,NOM_EMP,PRENOM_EMP,NUMERO_TELEPHONE,AGE_EMP,ADRESSE_MAIL,MOT_DE_PASSE,ROLE from employes order by CIN_EMPLOYE");
+         model->setQuery("select CIN_EMPLOYE,NOM_EMP,PRENOM_EMP,NUMERO_TELEPHONE,AGE_EMP,ADRESSE_MAIL,MOT_DE_PASSE,ROLE,CARD_ID from employes order by CIN_EMPLOYE");
 
      model->setHeaderData(0, Qt::Horizontal, QObject::tr("cin"));
      model->setHeaderData(1, Qt::Horizontal, QObject::tr("nom"));
@@ -114,7 +118,9 @@ bool Employee::ajouter()
      model->setHeaderData(3, Qt::Horizontal, QObject::tr("age"));
      model->setHeaderData(4, Qt::Horizontal, QObject::tr("tel"));
      model->setHeaderData(5, Qt::Horizontal, QObject::tr("adresse"));
-     model->setHeaderData(6, Qt::Horizontal, QObject::tr("departement"));
+     model->setHeaderData(6, Qt::Horizontal, QObject::tr("mdp"));
+     model->setHeaderData(7, Qt::Horizontal, QObject::tr("role"));
+     model->setHeaderData(8, Qt::Horizontal, QObject::tr("id carte"));
          return model;
  }
  QSqlQueryModel* Employee::rechercher(QString a)

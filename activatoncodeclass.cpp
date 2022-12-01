@@ -50,8 +50,8 @@ void ActivatonCodeClass::checkCode()
   int checker=ui->le_code->text().toInt();
   if(checker==getCode()){
       QSqlQuery query;
-      if(query.exec("insert into EMPLOYES(CIN_EMPLOYE,NOM_EMP,PRENOM_EMP,NUMERO_TELEPHONE,AGE_EMP,ADRESSE_MAIL,MOT_DE_PASSE,ROLE)"
- " values('"+id_str+"','"+getUname()+"','"+getPrenom()+"','"+tel_str+"','"+age_str+"','"+getEmail()+"','"+getPass()+"','"+getRole()+"')")){
+      if(query.exec("insert into EMPLOYES(CIN_EMPLOYE,NOM_EMP,PRENOM_EMP,NUMERO_TELEPHONE,AGE_EMP,ADRESSE_MAIL,MOT_DE_PASSE,ROLE,CARD_ID)"
+ " values('"+id_str+"','"+getUname()+"','"+getPrenom()+"','"+tel_str+"','"+age_str+"','"+getEmail()+"','"+getPass()+"','"+getRole()+"','"+getcarte()+"')")){
 
 
           QMessageBox::information(this,"System Message!","User Created Succesfully!",QMessageBox::Ok);
