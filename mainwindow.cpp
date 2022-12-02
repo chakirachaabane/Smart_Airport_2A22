@@ -350,6 +350,7 @@ void MainWindow::onMsg()
 
            qDebug()<<"Data Received: " <<data;
            //partie output
+
            if(data.split(':')[0] == "s")
                   {
                       if(data.split(':')[1] == "-1")
@@ -363,11 +364,11 @@ void MainWindow::onMsg()
                       if(nom!="")
                           qDebug()<<role;
                       if(role=="admin")
-                        {ui->stackedWidget->setCurrentIndex(1);nom+=" welcome";
+                        {ui->stackedWidget->setCurrentIndex(1);nom+=" welcome";A.write_to_arduino("1");
                          msg.setText(nom);msg.exec();
                         }
                        else {if(role=="employe")
-                                {ui->stackedWidget->setCurrentIndex(2);nom+=" welcome";
+                                {ui->stackedWidget->setCurrentIndex(2);nom+=" welcome";A.write_to_arduino("2");
                                  msg.setText(nom);msg.exec();}
                              else
                                 msg.setText("id nexiste pas !!!!!!");msg.exec();
