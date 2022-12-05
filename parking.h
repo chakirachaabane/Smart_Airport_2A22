@@ -1,4 +1,4 @@
-#ifndef PARKING_H
+/*#ifndef PARKING_H
 #define PARKING_H
 #include <QSerialPort>
 
@@ -13,4 +13,4 @@ private:
    int dispo;
 };
 
-#endif // PARKING_H
+#endif // PARKING_H*/

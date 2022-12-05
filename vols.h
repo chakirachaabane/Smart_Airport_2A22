@@ -28,7 +28,7 @@ private :
     void setprix(float n);
     void setvoyageurs(int n) ;
     void setmatricule(QString n);
-
+    void exporter(QTableView *table) ;
 
     int get_identifiant() ;
     QString get_destination();
@@ -49,6 +49,11 @@ private :
     QSqlQueryModel * trie_date();
     QSqlQueryModel * trie_voyageurs();
     QSqlQueryModel*  rechercherDate(QDate);
+
+
+    QSqlQueryModel * afficher_facture();
+    QSqlQueryModel * get_matricules();
+
 };
 
 #endif // VOLS_H

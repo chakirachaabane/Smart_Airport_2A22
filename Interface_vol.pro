@@ -1,10 +1,10 @@
 QT       += core gui
 QT += sql
-
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
+QT += printsupport
 CONFIG += c++11
-
+QT += charts
+QT+= serialport
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -17,16 +17,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    arduino.cpp \
     connection.cpp \
     dialog.cpp \
     main.cpp \
     mainwindow.cpp \
+    parking.cpp \
     vols.cpp
 
 HEADERS += \
+    arduino.h \
     connection.h \
     dialog.h \
     mainwindow.h \
+    parking.h \
     vols.h
 
 FORMS += \

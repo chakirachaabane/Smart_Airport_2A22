@@ -1,4 +1,4 @@
-#include "parking.h"
+/*#include "parking.h"
 #include <QSqlQuery>
 #include <QSqlQueryModel>
 #include <QString>
@@ -26,4 +26,4 @@ void parking:: update(int space){
     query.exec();
 
 
-}
+}*/
