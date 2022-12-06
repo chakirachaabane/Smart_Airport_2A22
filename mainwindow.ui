@@ -253,19 +253,6 @@ QRadioButton
           <string>Forgot password ?</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="scan_card_bt">
-         <property name="geometry">
-          <rect>
-           <x>80</x>
-           <y>330</y>
-           <width>261</width>
-           <height>21</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>scan card</string>
-         </property>
-        </widget>
        </widget>
       </widget>
      </widget>
@@ -965,7 +952,7 @@ QRadioButton
        </widget>
        <widget class="QWidget" name="g_vol">
         <attribute name="title">
-         <string>gestion vols</string>
+         <string>gestion des vols</string>
         </attribute>
        </widget>
        <widget class="QWidget" name="g_avion">
@@ -1104,7 +1091,7 @@ QTabBar::tab:selected
        </widget>
        <widget class="QWidget" name="g_vol_2">
         <attribute name="title">
-         <string>gestion vols</string>
+         <string>gestion des vols</string>
         </attribute>
        </widget>
        <widget class="QWidget" name="g_avion_2">
