@@ -5,6 +5,10 @@
 #include<QObject>
 #include<QtDebug>
 
+#include<QTableView>
+#include<QCoreApplication>
+#include<QFile>
+#include<QFileDialog>
 
 Vols::Vols()
 {
@@ -49,6 +53,7 @@ bool Vols::ajouter()
     query.bindValue(":destination",destination);
     query.bindValue(":heure_de_depart",heure);
     query.bindValue(":date_de_depart",date);
+
     query.bindValue(":duree",duree);
     query.bindValue(":nombre_de_voyageurs",voy);
     query.bindValue(":prix_vol",prix_v);
@@ -75,8 +80,8 @@ QSqlQueryModel * Vols:: afficher()
     model->setQuery("select * from VOLS");
     model->setHeaderData(0,Qt::Horizontal,QObject::tr("Id_vol"));
     model->setHeaderData(1,Qt::Horizontal,QObject::tr("Destination"));
-    model->setHeaderData(2,Qt::Horizontal,QObject::tr("Date_de_depart"));
-    model->setHeaderData(3,Qt::Horizontal,QObject::tr("Heure_de_depart"));
+    model->setHeaderData(3,Qt::Horizontal,QObject::tr("Date_de_depart"));
+    model->setHeaderData(2,Qt::Horizontal,QObject::tr("Heure_de_depart"));
     model->setHeaderData(4,Qt::Horizontal,QObject::tr("Duree"));
     model->setHeaderData(5,Qt::Horizontal,QObject::tr("Nombre_voyageurs"));
     model->setHeaderData(6,Qt::Horizontal,QObject::tr("Prix_vol"));
@@ -91,11 +96,12 @@ bool Vols::modifier(int identifiant,QString destination,int voyageurs,float prix
     QString voy=QString::number(voyageurs);
     QString prix_v=QString::number(prix);
 
-    query.prepare("UPDATE VOLS set id_vol= :id_vol ,destination= :destination,heure_de_depart= :heure_de_depart,date_de_depart= :date_de_depart ,duree= :duree,nombre_de_voyageurs= :nombre_de_voyageurs,prix_vol= :prix_vol,matricule= :matricule where ID_VOL =  :id_vol" );
+    query.prepare("UPDATE VOLS set id_vol= :id_vol ,destination= :destination,heure_de_depart= :heure_de_depart,date_de_depart= :date_de_depart,duree= :duree,nombre_de_voyageurs= :nombre_de_voyageurs,prix_vol= :prix_vol,matricule= :matricule where ID_VOL =  :id_vol" );
     query.bindValue(":id_vol",id);
     query.bindValue(":destination",destination);
     query.bindValue(":heure_de_depart",heure);
     query.bindValue(":date_de_depart",date);
+
     query.bindValue(":duree",duree);
     query.bindValue(":nombre_de_voyageurs",voy);
     query.bindValue(":prix_vol",prix_v);
@@ -103,7 +109,202 @@ bool Vols::modifier(int identifiant,QString destination,int voyageurs,float prix
     return query.exec();
 }
 
+QSqlQueryModel* Vols :: recherche_id(int identifiant)
+{
 
+QSqlQuery query;
+QString id=QString::number(identifiant);
+ query.prepare("SELECT * FROM vols where Id_vol = :identifiant");
+ query.bindValue(":identifiant",id);
+ query.exec();
+ QSqlQueryModel *model=new QSqlQueryModel();
+ model->setQuery(query);
+    model->setHeaderData(0,Qt::Horizontal,QObject::tr("Id_vol"));
+    model->setHeaderData(1,Qt::Horizontal,QObject::tr("Destination"));
+    model->setHeaderData(3,Qt::Horizontal,QObject::tr("Date_de_depart"));
+    model->setHeaderData(2,Qt::Horizontal,QObject::tr("Heure_de_depart"));
+    model->setHeaderData(4,Qt::Horizontal,QObject::tr("Duree"));
+    model->setHeaderData(5,Qt::Horizontal,QObject::tr("Nombre_voyageurs"));
+    model->setHeaderData(6,Qt::Horizontal,QObject::tr("Prix_vol"));
+    model->setHeaderData(7,Qt::Horizontal,QObject::tr("matricule"));
+  return  model;
+
+}
+
+
+QSqlQueryModel* Vols :: recherche_destination(QString destination)
+{
+
+QSqlQuery query;
+ query.prepare("SELECT * FROM vols where Destination = :destination");
+ query.bindValue(":destination",destination);
+ query.exec();
+ QSqlQueryModel *model=new QSqlQueryModel();
+ model->setQuery(query);
+    model->setHeaderData(0,Qt::Horizontal,QObject::tr("Id_vol"));
+    model->setHeaderData(1,Qt::Horizontal,QObject::tr("Destination"));
+    model->setHeaderData(3,Qt::Horizontal,QObject::tr("Date_de_depart"));
+    model->setHeaderData(2,Qt::Horizontal,QObject::tr("Heure_de_depart"));
+    model->setHeaderData(4,Qt::Horizontal,QObject::tr("Duree"));
+    model->setHeaderData(5,Qt::Horizontal,QObject::tr("Nombre_voyageurs"));
+    model->setHeaderData(6,Qt::Horizontal,QObject::tr("Prix_vol"));
+    model->setHeaderData(7,Qt::Horizontal,QObject::tr("matricule"));
+  return  model;
+
+}
+
+QSqlQueryModel* Vols :: recherche_matricule(QString matricule)
+{
+    QSqlQuery query;
+     query.prepare("SELECT * FROM vols where matricule = :matricule");
+     query.bindValue(":matricule",matricule);
+     query.exec();
+     QSqlQueryModel *model=new QSqlQueryModel();
+     model->setQuery(query);
+        model->setHeaderData(0,Qt::Horizontal,QObject::tr("Id_vol"));
+        model->setHeaderData(1,Qt::Horizontal,QObject::tr("Destination"));
+        model->setHeaderData(3,Qt::Horizontal,QObject::tr("Date_de_depart"));
+        model->setHeaderData(2,Qt::Horizontal,QObject::tr("Heure_de_depart"));
+        model->setHeaderData(4,Qt::Horizontal,QObject::tr("Duree"));
+        model->setHeaderData(5,Qt::Horizontal,QObject::tr("Nombre_voyageurs"));
+        model->setHeaderData(6,Qt::Horizontal,QObject::tr("Prix_vol"));
+        model->setHeaderData(7,Qt::Horizontal,QObject::tr("matricule"));
+      return  model;
+
+}
+
+QSqlQueryModel* Vols ::trie_prix()
+{
+  QSqlQueryModel *model=new QSqlQueryModel();
+ model->setQuery("SELECT * FROM VOLS ORDER BY PRIX_VOL " );
+ model->setHeaderData(0,Qt::Horizontal,QObject::tr("Id_vol"));
+ model->setHeaderData(1,Qt::Horizontal,QObject::tr("Destination"));
+ model->setHeaderData(3,Qt::Horizontal,QObject::tr("Date_de_depart"));
+ model->setHeaderData(2,Qt::Horizontal,QObject::tr("Heure_de_depart"));
+ model->setHeaderData(4,Qt::Horizontal,QObject::tr("Duree"));
+ model->setHeaderData(5,Qt::Horizontal,QObject::tr("Nombre_voyageurs"));
+ model->setHeaderData(6,Qt::Horizontal,QObject::tr("Prix_vol"));
+ model->setHeaderData(7,Qt::Horizontal,QObject::tr("matricule"));
+  return  model;
+
+}
+
+QSqlQueryModel* Vols ::trie_date()
+{
+  QSqlQueryModel *model=new QSqlQueryModel();
+ model->setQuery("SELECT * FROM VOLS ORDER BY Date_de_depart  " );
+ model->setHeaderData(0,Qt::Horizontal,QObject::tr("Id_vol"));
+ model->setHeaderData(1,Qt::Horizontal,QObject::tr("Destination"));
+ model->setHeaderData(3,Qt::Horizontal,QObject::tr("Date_de_depart"));
+ model->setHeaderData(2,Qt::Horizontal,QObject::tr("Heure_de_depart"));
+ model->setHeaderData(4,Qt::Horizontal,QObject::tr("Duree"));
+ model->setHeaderData(5,Qt::Horizontal,QObject::tr("Nombre_voyageurs"));
+ model->setHeaderData(6,Qt::Horizontal,QObject::tr("Prix_vol"));
+ model->setHeaderData(7,Qt::Horizontal,QObject::tr("matricule"));
+  return  model;
+
+}
+
+QSqlQueryModel* Vols ::trie_voyageurs()
+{
+  QSqlQueryModel *model=new QSqlQueryModel();
+ model->setQuery("SELECT * FROM VOLS ORDER BY Nombre_de_voyageurs  " );
+ model->setHeaderData(0,Qt::Horizontal,QObject::tr("Id_vol"));
+ model->setHeaderData(1,Qt::Horizontal,QObject::tr("Destination"));
+ model->setHeaderData(3,Qt::Horizontal,QObject::tr("Date_de_depart"));
+ model->setHeaderData(2,Qt::Horizontal,QObject::tr("Heure_de_depart"));
+ model->setHeaderData(4,Qt::Horizontal,QObject::tr("Duree"));
+ model->setHeaderData(5,Qt::Horizontal,QObject::tr("Nombre_de_voyageurs"));
+ model->setHeaderData(6,Qt::Horizontal,QObject::tr("Prix_vol"));
+ model->setHeaderData(7,Qt::Horizontal,QObject::tr("matricule"));
+  return  model;
+}
+
+QSqlQueryModel*  Vols ::rechercherDate(QDate date)
+ {
+
+    QSqlQuery query;
+
+
+     query.prepare("SELECT* FROM VOLS where Date_de_depart=:Date_de_depart");
+     query.bindValue(":Date_de_depart",date);
+     query.exec();
+     QSqlQueryModel *model= new QSqlQueryModel;
+model->setQuery(query);
+model->setHeaderData(0,Qt::Horizontal,QObject::tr("Id_vol"));
+model->setHeaderData(1,Qt::Horizontal,QObject::tr("Destination"));
+model->setHeaderData(3,Qt::Horizontal,QObject::tr("Date_de_depart"));
+model->setHeaderData(2,Qt::Horizontal,QObject::tr("Heure_de_depart"));
+model->setHeaderData(4,Qt::Horizontal,QObject::tr("Duree"));
+model->setHeaderData(5,Qt::Horizontal,QObject::tr("Nombre_de_voyageurs"));
+model->setHeaderData(6,Qt::Horizontal,QObject::tr("Prix_vol"));
+model->setHeaderData(7,Qt::Horizontal,QObject::tr("matricule"));
+    return model;
+
+ }
+
+
+void Vols::exporter(QTableView *table)
+{   //excel
+    QString filters("CSV files (*.csv);;All files (*.*)");
+    QString defaultFilter("CSV files (*.csv)");
+    QString fileName = QFileDialog::getSaveFileName(0, "Save file", QCoreApplication::applicationDirPath(),
+                                                        filters, &defaultFilter);
+    QFile file(fileName);
+    QAbstractItemModel *model =  table->model();
+    if (file.open(QFile::WriteOnly | QFile::Truncate))
+    {
+        QTextStream data(&file);
+        QStringList strList;
+        for (int i = 0; i < model->columnCount(); i++)
+        {
+            if (model->headerData(i, Qt::Horizontal, Qt::DisplayRole).toString().length() > 0)
+                strList.append("\"" + model->headerData(i, Qt::Horizontal, Qt::DisplayRole).toString() + " \"");
+            else
+                strList.append("");
+         }
+         data << strList.join(";") << "\n";
+         for (int i = 0; i < model->rowCount(); i++)
+         {
+            strList.clear();
+            for (int j = 0; j < model->columnCount(); j++)
+            {
+
+                if (model->data(model->index(i, j)).toString().length() > 0)
+                    strList.append("\"" + model->data(model->index(i, j)).toString() + "\"");
+                else
+                    strList.append("");
+             }
+                data << strList.join(";") + "\n";
+            }
+            file.close();
+        }
+}
+
+
+QSqlQueryModel * Vols:: afficher_facture()
+{
+    QSqlQueryModel * model =new QSqlQueryModel();
+    model->setQuery("select ID_VOL,DESTINATION,DATE_DE_DEPART,NOMBRE_DE_VOYAGEURS,PRIX_VOL*0.82,PRIX_VOL*0.18,PRIX_VOL,PRIX_VOL*NOMBRE_DE_VOYAGEURS from VOLS");
+    model->setHeaderData(0,Qt::Horizontal,QObject::tr("Id_vol"));
+    model->setHeaderData(1,Qt::Horizontal,QObject::tr("Destination"));
+    model->setHeaderData(2,Qt::Horizontal,QObject::tr("Date depart"));
+    model->setHeaderData(3,Qt::Horizontal,QObject::tr("Nombre voyageurs"));
+    model->setHeaderData(4,Qt::Horizontal,QObject::tr("Prix vol avant TVA"));
+    model->setHeaderData(5,Qt::Horizontal,QObject::tr("Montant TVA"));
+    model->setHeaderData(6,Qt::Horizontal,QObject::tr("Prix Vol"));
+    model->setHeaderData(7,Qt::Horizontal,QObject::tr("Prix total"));
+
+    return model;
+}
+
+QSqlQueryModel * Vols:: get_matricules()
+{
+    QSqlQueryModel * model =new QSqlQueryModel();
+    model->setQuery("select MATRICULE from AVIONS");
+
+    return model;
+}
 
 int Vols:: get_identifiant() {return identifiant;}
 QString Vols:: get_destination () {return destination;}
