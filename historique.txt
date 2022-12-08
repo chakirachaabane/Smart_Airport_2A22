@@ -1,0 +1,41 @@
+CIN_VOY:789
+NOM_VOY:fgh
+ PRENOM_VOY :jkl
+NUMERO_PASSEPORT:456
+AGE_VOY :50
+ORIGINE:rty
+GENRE :rty
+------------------------------------------------
+CIN_VOY:8787878
+NOM_VOY:azizi
+ PRENOM_VOY :mohamed
+NUMERO_PASSEPORT:67890
+AGE_VOY :98
+ORIGINE:hjkl
+GENRE :hjkl
+------------------------------------------------
+CIN_VOY:111111111
+NOM_VOY:MMMM
+ PRENOM_VOY :JJJ
+NUMERO_PASSEPORT:222222222
+AGE_VOY :12
+ORIGINE:MAS
+GENRE :MAS
+------------------------------------------------
+CIN_VOY:111111111
+NOM_VOY:AAAAA
+ PRENOM_VOY :JJJ
+NUMERO_PASSEPORT:222222222
+AGE_VOY :12
+ORIGINE:MAS
+GENRE :MAS
+------------------------------------------------
+CIN_VOY:234567
+NOM_VOY:homrani
+ PRENOM_VOY :basma
+NUMERO_PASSEPORT:890765
+AGE_VOY :78
+ORIGINE:feminin
+GENRE :feminin
+ven. nov. 25 09:51:42 2022
+------------------------------------------------
