@@ -148,6 +148,23 @@ QSqlQueryModel *   Station::rechercher(int ID_STATION)
 }
 
 
+std::map<QString,int> Station::statNbrPerType(){
+    QSqlQuery query;
+    std::map <QString,int> list;
+    try {
+        query.prepare("select * from STATION order by ID_STATION");
+        if(query.exec()){
+            while (query.next()) {
+                query.value('s').toInt();
+                list.insert({query.value(1).toString() , query.value(0).toInt()});
+            }
+        return list;
+        } } catch (...) {
+        list["error"] = 0;
+        return  list;
+    }
+
+}
 
 
 

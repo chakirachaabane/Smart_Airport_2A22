@@ -3,9 +3,11 @@
 # Project created by QtCreator 2018-10-26T21:45:23
 #
 #-------------------------------------------------
+QT       += core gui serialport
 
-QT       += core gui sql
+
 QT+=sql
+QT       += core gui sql network multimedia multimediawidgets charts printsupport widgets axcontainer
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -26,15 +28,21 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    arduino.cpp \
+    exportexcel.cpp \
         main.cpp \
         mainwindow.cpp \
     connection.cpp \
-    station.cpp
+    station.cpp \
+    voyageur.cpp
 
 HEADERS += \
+    arduino.h \
+    exportexcel.h \
         mainwindow.h \
     connection.h \
-    station.h
+    station.h \
+    voyageur.h
 
 FORMS += \
         mainwindow.ui
@@ -44,4 +52,5 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-RESOURCES +=
+RESOURCES += \
+    map.qrc
