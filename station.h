@@ -2,11 +2,12 @@
 #define STATION_H
 #include <QString>
 #include <QSqlQueryModel>
+#include <QDateTime>
 class Station
 {
 public:
    Station();
-    Station(int,int , int ,QString);
+    Station(int,int , int ,QString,QDateTime);
     int  getid_station();
     int getnum_poste();
     int getnum_piste();
@@ -18,12 +19,16 @@ public:
     bool ajouter();
     QSqlQueryModel* afficher();
      bool supprimer(int);
-     bool modifier(int, int, int,QString);
+     bool modifier(int, int, int,QString,QDateTime);
+     QSqlQueryModel * trier();
+      QSqlQueryModel * triernump();
+       QSqlQueryModel * rechercher(int ID_STATION);
 private:
     int id_station ;
     int num_poste ;
     int num_piste ;
     QString destination ;
+    QDateTime heure_arrivee;
 };
 
 #endif // STATION_H

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1099</width>
+    <width>1212</width>
     <height>690</height>
    </rect>
   </property>
@@ -19,20 +19,14 @@ background-color: qlineargradient(spread:repeat, x1:0, y1:0, x2:1, y2:1, stop:0 
 </string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QTabWidget" name="tabWidget">
+   <widget class="QTabWidget" name="TabWidget">
     <property name="geometry">
      <rect>
-      <x>210</x>
-      <y>10</y>
-      <width>621</width>
-      <height>401</height>
+      <x>90</x>
+      <y>30</y>
+      <width>1041</width>
+      <height>551</height>
      </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>621</width>
-      <height>401</height>
-     </size>
     </property>
     <property name="mouseTracking">
      <bool>true</bool>
@@ -44,7 +38,7 @@ background-color: rgb(231, 240, 255);
 border-color: qlineargradient(spread:repeat, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(0, 80, 104, 255), stop:1 rgba(255, 255, 255, 255));</string>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>4</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -74,7 +68,7 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
 font: 75 9pt &quot;MS Shell Dlg 2&quot;;</string>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;ID_STATION&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt; font-weight:600;&quot;&gt;ID_STATION&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="textFormat">
        <enum>Qt::RichText</enum>
@@ -83,14 +77,19 @@ font: 75 9pt &quot;MS Shell Dlg 2&quot;;</string>
      <widget class="QLineEdit" name="le_id">
       <property name="geometry">
        <rect>
-        <x>200</x>
+        <x>340</x>
         <y>60</y>
         <width>113</width>
         <height>22</height>
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(255, 255, 255);</string>
+       <string notr="true">
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+	background:white;
+    selection-background-color: darkgray;</string>
       </property>
      </widget>
      <widget class="QLabel" name="poste">
@@ -138,11 +137,31 @@ font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
      <widget class="QPushButton" name="pb_ajouter">
       <property name="geometry">
        <rect>
-        <x>440</x>
-        <y>170</y>
+        <x>250</x>
+        <y>360</y>
         <width>93</width>
         <height>28</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton
+{
+ 
+  color:  rgb(170, 0, 127);
+  border: 2px solid gray;
+    border-radius: 20px;
+    padding: 0 8px;
+	background: rgb(255, 234, 207);
+    selection-background-color: darkgray;
+}
+QPushButton:hover{ 
+background: lightblue;
+ border: 2px solid gray;
+}
+QPushButton:pressed{ 
+background: lightblue;
+ border: 4px solid gray;
+}</string>
       </property>
       <property name="text">
        <string>Ajouter</string>
@@ -151,27 +170,37 @@ font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
      <widget class="QLineEdit" name="le_poste">
       <property name="geometry">
        <rect>
-        <x>200</x>
+        <x>340</x>
         <y>120</y>
         <width>113</width>
         <height>22</height>
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(255, 255, 255);</string>
+       <string notr="true">
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+	background:white;
+    selection-background-color: darkgray;</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="le_piste">
       <property name="geometry">
        <rect>
-        <x>200</x>
+        <x>340</x>
         <y>180</y>
         <width>113</width>
         <height>22</height>
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(255, 255, 255);</string>
+       <string notr="true">
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+	background:white;
+    selection-background-color: darkgray;</string>
       </property>
      </widget>
      <widget class="QLabel" name="destination">
@@ -202,14 +231,42 @@ font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
      <widget class="QLineEdit" name="le_destination">
       <property name="geometry">
        <rect>
-        <x>200</x>
+        <x>340</x>
         <y>240</y>
         <width>113</width>
-        <height>22</height>
+        <height>21</height>
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(255, 255, 255);</string>
+       <string notr="true">
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+	background:white;
+    selection-background-color: darkgray;</string>
+      </property>
+     </widget>
+     <widget class="QDateTimeEdit" name="dateTimeEdit_ajout_ha">
+      <property name="geometry">
+       <rect>
+        <x>250</x>
+        <y>300</y>
+        <width>194</width>
+        <height>22</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>310</y>
+        <width>151</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Heure d'arrivée</string>
       </property>
      </widget>
     </widget>
@@ -220,11 +277,228 @@ font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
      <widget class="QTableView" name="table_station">
       <property name="geometry">
        <rect>
-        <x>90</x>
-        <y>60</y>
-        <width>381</width>
-        <height>261</height>
+        <x>40</x>
+        <y>20</y>
+        <width>841</width>
+        <height>271</height>
        </rect>
+      </property>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_7">
+      <property name="geometry">
+       <rect>
+        <x>550</x>
+        <y>300</y>
+        <width>251</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>MS Shell Dlg 2</family>
+        <pointsize>11</pointsize>
+        <weight>9</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background:transparent;</string>
+      </property>
+      <property name="title">
+       <string>Recherche</string>
+      </property>
+      <widget class="QLineEdit" name="le__recherche">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>31</y>
+         <width>201</width>
+         <height>31</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QPushButton" name="rechercherr">
+      <property name="geometry">
+       <rect>
+        <x>420</x>
+        <y>320</y>
+        <width>111</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>rechercher</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="tri_numdeposte">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>350</y>
+        <width>309</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>MS Shell Dlg 2</family>
+        <pointsize>11</pointsize>
+        <weight>9</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton
+{
+ 
+  color:  rgb(170, 0, 127);
+  border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+	background: rgb(255, 234, 207);
+    selection-background-color: darkgray;
+}
+QPushButton:hover{ 
+background: lightblue;
+ border: 2px solid gray;
+}
+QPushButton:pressed{ 
+background: lightblue;
+ border: 4px solid gray;
+}</string>
+      </property>
+      <property name="text">
+       <string>Tri par NUM_POSTE</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_triid">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>310</y>
+        <width>309</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>MS Shell Dlg 2</family>
+        <pointsize>11</pointsize>
+        <weight>9</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton
+{
+ 
+  color:  rgb(170, 0, 127);
+  border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+	background: rgb(255, 234, 207);
+    selection-background-color: darkgray;
+}
+QPushButton:hover{ 
+background: lightblue;
+ border: 2px solid gray;
+}
+QPushButton:pressed{ 
+background: lightblue;
+ border: 4px solid gray;
+}</string>
+      </property>
+      <property name="text">
+       <string>Tri par ID</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_3">
+     <attribute name="title">
+      <string>supprimer </string>
+     </attribute>
+     <widget class="QLineEdit" name="l_id_supp">
+      <property name="geometry">
+       <rect>
+        <x>310</x>
+        <y>100</y>
+        <width>131</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+	background:white;
+    selection-background-color: darkgray;</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="PB_supp">
+      <property name="geometry">
+       <rect>
+        <x>250</x>
+        <y>200</y>
+        <width>161</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton
+{
+ 
+  color:  rgb(170, 0, 127);
+  border: 2px solid gray;
+    border-radius: 20px;
+    padding: 0 8px;
+	background: rgb(255, 234, 207);
+    selection-background-color: darkgray;
+}
+QPushButton:hover{ 
+background: lightblue;
+ border: 2px solid gray;
+}
+QPushButton:pressed{ 
+background: lightblue;
+ border: 4px solid gray;
+}</string>
+      </property>
+      <property name="text">
+       <string>supprimer </string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="le_nump_3">
+      <property name="geometry">
+       <rect>
+        <x>80</x>
+        <y>100</y>
+        <width>131</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>MS Shell Dlg 2</family>
+        <pointsize>12</pointsize>
+        <weight>9</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font: 75 12pt &quot;MS Shell Dlg 2&quot;;
+font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt; font-weight:600;&quot;&gt;ID_STATION&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="textFormat">
+       <enum>Qt::RichText</enum>
       </property>
      </widget>
     </widget>
@@ -270,7 +544,7 @@ font: 75 11pt &quot;MS Shell Dlg 2&quot;;
 font: 6pt &quot;MS Shell Dlg 2&quot;;</string>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt; color:#000000;&quot;&gt;‭Num de poste&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt; font-weight:600; color:#000000;&quot;&gt;‭Num de poste&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="textFormat">
        <enum>Qt::RichText</enum>
@@ -279,27 +553,49 @@ font: 6pt &quot;MS Shell Dlg 2&quot;;</string>
      <widget class="QLineEdit" name="l_poste_modif">
       <property name="geometry">
        <rect>
-        <x>280</x>
+        <x>320</x>
         <y>110</y>
         <width>113</width>
         <height>22</height>
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(255, 255, 255);</string>
+       <string notr="true">
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+	background:white;
+    selection-background-color: darkgray;</string>
       </property>
      </widget>
      <widget class="QPushButton" name="PB_Modif">
       <property name="geometry">
        <rect>
-        <x>460</x>
-        <y>90</y>
+        <x>230</x>
+        <y>370</y>
         <width>121</width>
         <height>28</height>
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">font: 75 11pt &quot;MS Shell Dlg 2&quot;;</string>
+       <string notr="true">QPushButton
+{
+ 
+  color:  rgb(170, 0, 127);
+  border: 2px solid gray;
+    border-radius: 20px;
+    padding: 0 8px;
+	background: rgb(255, 234, 207);
+    selection-background-color: darkgray;
+}
+QPushButton:hover{ 
+background: lightblue;
+ border: 2px solid gray;
+}
+QPushButton:pressed{ 
+background: lightblue;
+ border: 4px solid gray;
+}</string>
       </property>
       <property name="text">
        <string>Confirmer </string>
@@ -330,7 +626,7 @@ font: 75 11pt &quot;MS Shell Dlg 2&quot;;
 font: 6pt &quot;MS Shell Dlg 2&quot;;</string>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Num de piste &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt; font-weight:600;&quot;&gt;Num de piste &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="textFormat">
        <enum>Qt::RichText</enum>
@@ -339,14 +635,19 @@ font: 6pt &quot;MS Shell Dlg 2&quot;;</string>
      <widget class="QLineEdit" name="l_piste_modif">
       <property name="geometry">
        <rect>
-        <x>280</x>
+        <x>320</x>
         <y>180</y>
         <width>113</width>
         <height>22</height>
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(255, 255, 255);</string>
+       <string notr="true">
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+	background:white;
+    selection-background-color: darkgray;</string>
       </property>
      </widget>
      <widget class="QLabel" name="le_nump_4">
@@ -372,7 +673,7 @@ font: 6pt &quot;MS Shell Dlg 2&quot;;</string>
 font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;ID_STATION&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;ID_STATION&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="textFormat">
        <enum>Qt::RichText</enum>
@@ -381,14 +682,19 @@ font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
      <widget class="QLineEdit" name="l_id_modif">
       <property name="geometry">
        <rect>
-        <x>280</x>
+        <x>320</x>
         <y>40</y>
         <width>113</width>
         <height>22</height>
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(255, 255, 255);</string>
+       <string notr="true">
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+	background:white;
+    selection-background-color: darkgray;</string>
       </property>
      </widget>
      <widget class="QLabel" name="destination_2">
@@ -403,14 +709,15 @@ font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
       <property name="font">
        <font>
         <family>MS Shell Dlg 2</family>
-        <pointsize>11</pointsize>
+        <pointsize>10</pointsize>
         <weight>9</weight>
         <italic>false</italic>
         <bold>false</bold>
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">color:rgb(0, 0, 0)</string>
+       <string notr="true">
+font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
       </property>
       <property name="text">
        <string>DESTINATION</string>
@@ -419,77 +726,237 @@ font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
      <widget class="QLineEdit" name="l_destination_modif_2">
       <property name="geometry">
        <rect>
-        <x>280</x>
-        <y>240</y>
+        <x>320</x>
+        <y>250</y>
         <width>113</width>
         <height>22</height>
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(255, 255, 255);</string>
+       <string notr="true">
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+	background:white;
+    selection-background-color: darkgray;</string>
       </property>
      </widget>
-    </widget>
-    <widget class="QWidget" name="tab_3">
-     <attribute name="title">
-      <string>supprimer </string>
-     </attribute>
-     <widget class="QLineEdit" name="l_id_supp">
+     <widget class="QDateTimeEdit" name="dateTimeEdit_ajout_ha_modif">
       <property name="geometry">
        <rect>
-        <x>310</x>
-        <y>160</y>
-        <width>131</width>
+        <x>250</x>
+        <y>310</y>
+        <width>194</width>
         <height>22</height>
        </rect>
       </property>
-      <property name="styleSheet">
-       <string notr="true">background-color: rgb(255, 255, 255);</string>
-      </property>
      </widget>
-     <widget class="QPushButton" name="PB_supp">
+     <widget class="QLabel" name="label_2">
       <property name="geometry">
        <rect>
-        <x>320</x>
-        <y>240</y>
-        <width>93</width>
+        <x>30</x>
+        <y>310</y>
+        <width>151</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Heure d'arrivée</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_5">
+     <attribute name="title">
+      <string>Map</string>
+     </attribute>
+     <widget class="QLabel" name="label_map">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>50</y>
+        <width>971</width>
+        <height>431</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap>../ar.png</pixmap>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_station1">
+      <property name="geometry">
+       <rect>
+        <x>180</x>
+        <y>90</y>
+        <width>113</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Station 1</string>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_station2">
+      <property name="geometry">
+       <rect>
+        <x>460</x>
+        <y>100</y>
+        <width>113</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Station 2</string>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_station3">
+      <property name="geometry">
+       <rect>
+        <x>760</x>
+        <y>100</y>
+        <width>113</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Station 3</string>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_station4">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>400</y>
+        <width>113</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Station 4</string>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_station5">
+      <property name="geometry">
+       <rect>
+        <x>450</x>
+        <y>410</y>
+        <width>113</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Station 5</string>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_station6">
+      <property name="geometry">
+       <rect>
+        <x>750</x>
+        <y>400</y>
+        <width>113</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Station 6</string>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_plus_s1">
+      <property name="geometry">
+       <rect>
+        <x>300</x>
+        <y>90</y>
+        <width>41</width>
         <height>28</height>
        </rect>
       </property>
-      <property name="styleSheet">
-       <string notr="true">font: 75 11pt &quot;MS Shell Dlg 2&quot;;</string>
-      </property>
       <property name="text">
-       <string>supprimer </string>
+       <string>Plus</string>
       </property>
      </widget>
-     <widget class="QLabel" name="le_nump_3">
+     <widget class="QPushButton" name="pushButton_plus_s2">
       <property name="geometry">
        <rect>
-        <x>90</x>
-        <y>160</y>
-        <width>131</width>
-        <height>21</height>
+        <x>580</x>
+        <y>100</y>
+        <width>41</width>
+        <height>28</height>
        </rect>
       </property>
-      <property name="font">
-       <font>
-        <family>MS Shell Dlg 2</family>
-        <pointsize>12</pointsize>
-        <weight>9</weight>
-        <italic>false</italic>
-        <bold>false</bold>
-       </font>
+      <property name="text">
+       <string>Plus</string>
       </property>
-      <property name="styleSheet">
-       <string notr="true">font: 75 12pt &quot;MS Shell Dlg 2&quot;;
-font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
+     </widget>
+     <widget class="QPushButton" name="pushButton_plus_s3">
+      <property name="geometry">
+       <rect>
+        <x>880</x>
+        <y>100</y>
+        <width>41</width>
+        <height>28</height>
+       </rect>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;ID_STATION&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>Plus</string>
       </property>
-      <property name="textFormat">
-       <enum>Qt::RichText</enum>
+     </widget>
+     <widget class="QPushButton" name="pushButton_plus_s4">
+      <property name="geometry">
+       <rect>
+        <x>290</x>
+        <y>400</y>
+        <width>41</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Plus</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_plus_s5">
+      <property name="geometry">
+       <rect>
+        <x>570</x>
+        <y>410</y>
+        <width>41</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Plus</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_plus_s6">
+      <property name="geometry">
+       <rect>
+        <x>870</x>
+        <y>400</y>
+        <width>41</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Plus</string>
       </property>
      </widget>
     </widget>
@@ -509,7 +976,7 @@ font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1099</width>
+     <width>1212</width>
      <height>26</height>
     </rect>
    </property>

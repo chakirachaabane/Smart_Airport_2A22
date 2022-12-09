@@ -1,6 +1,9 @@
  #include "mainwindow.h"
 #include <QApplication>
 #include <QMessageBox>
+#include <QGraphicsView>
+#include <QGraphicsPixmapItem>
+#include <QPixmap>
 #include "connection.h"
 int main(int argc, char *argv[])
 {
