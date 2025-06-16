@@ -1,0 +1,130 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system with Royal Blue and Beige theme */
+
+@layer base {
+  :root {
+    --background: 45 20% 98%;
+    --foreground: 210 40% 8%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 210 40% 8%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 40% 8%;
+
+    --primary: 210 100% 20%;
+    --primary-foreground: 45 20% 98%;
+
+    --secondary: 45 20% 95%;
+    --secondary-foreground: 210 40% 8%;
+
+    --muted: 45 20% 96%;
+    --muted-foreground: 210 40% 46%;
+
+    --accent: 45 30% 88%;
+    --accent-foreground: 210 40% 8%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 45 20% 90%;
+    --input: 45 20% 90%;
+    --ring: 210 100% 20%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 210 100% 15%;
+    --sidebar-foreground: 45 20% 95%;
+    --sidebar-primary: 210 100% 20%;
+    --sidebar-primary-foreground: 45 20% 98%;
+    --sidebar-accent: 210 100% 18%;
+    --sidebar-accent-foreground: 45 20% 95%;
+    --sidebar-border: 210 100% 18%;
+    --sidebar-ring: 210 100% 40%;
+  }
+
+  .dark {
+    --background: 210 100% 4%;
+    --foreground: 45 20% 98%;
+
+    --card: 210 100% 6%;
+    --card-foreground: 45 20% 98%;
+
+    --popover: 210 100% 6%;
+    --popover-foreground: 45 20% 98%;
+
+    --primary: 210 100% 20%;
+    --primary-foreground: 45 20% 98%;
+
+    --secondary: 210 100% 8%;
+    --secondary-foreground: 45 20% 98%;
+
+    --muted: 210 100% 8%;
+    --muted-foreground: 45 20% 65%;
+
+    --accent: 210 100% 8%;
+    --accent-foreground: 45 20% 98%;
+
+    --destructive: 0 84% 30%;
+    --destructive-foreground: 45 20% 98%;
+
+    --border: 210 100% 8%;
+    --input: 210 100% 8%;
+    --ring: 210 100% 40%;
+
+    --sidebar-background: 210 100% 4%;
+    --sidebar-foreground: 45 20% 95%;
+    --sidebar-primary: 210 100% 20%;
+    --sidebar-primary-foreground: 45 20% 98%;
+    --sidebar-accent: 210 100% 6%;
+    --sidebar-accent-foreground: 45 20% 95%;
+    --sidebar-border: 210 100% 6%;
+    --sidebar-ring: 210 100% 40%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+
+  .royal-gradient {
+    background: linear-gradient(135deg, #003366 0%, #0052b4 100%);
+  }
+
+  .beige-gradient {
+    background: linear-gradient(135deg, #f5f5dc 0%, #e8d5a8 100%);
+  }
+
+  .glass-effect {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+}
+
+@layer components {
+  .dashboard-card {
+    @apply bg-card border border-border rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-200;
+  }
+
+  .stat-card {
+    @apply dashboard-card bg-gradient-to-br from-royal-50 to-beige-50 border-royal-200;
+  }
+
+  .nav-item {
+    @apply flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 hover:bg-sidebar-accent text-sidebar-foreground;
+  }
+
+  .nav-item.active {
+    @apply bg-sidebar-primary text-sidebar-primary-foreground;
+  }
+}

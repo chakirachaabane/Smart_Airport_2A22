@@ -1,0 +1,917 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+.gitignore
+package.json
+prisma/schema.prisma
+src/config/prismaClient.js
+src/config/prismaClient.ts
+src/controllers/authController.js
+src/controllers/authController.ts
+src/index.js
+src/index.ts
+src/middleware/authMiddleware.js
+src/middleware/authMiddleware.ts
+src/routes/authRoutes.js
+src/routes/authRoutes.ts
+tsconfig.json
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path=".gitignore">
+node_modules
+# Keep environment variables out of version control
+.env
+
+/generated/prisma
+</file>
+
+<file path="package.json">
+{
+  "name": "projectflow-backend",
+  "version": "1.0.0",
+  "description": "Backend for ProjectFlow application",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js", 
+    "dev": "nodemon", 
+    "prisma:migrate": "npx prisma migrate dev", 
+    "prisma:generate": "npx prisma generate", 
+    "prisma:studio": "npx prisma studio" 
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module", 
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.9.2",
+    "prisma": "^5.11.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/node": "^20.11.30",
+    "nodemon": "^3.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.3"
+  }
+}
+</file>
+
+<file path="prisma/schema.prisma">
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql" // <-- Bien spécifier MySQL
+  url      = env("DATABASE_URL")
+}
+
+// Modèle Utilisateur basé sur les besoins de signup/signin et les rôles
+model User {
+  id               String    @id @default(uuid()) @db.VarChar(36) // UUID pour MySQL
+  email            String    @unique @db.VarChar(255) // Email unique pour la connexion
+  passwordHash     String    @db.VarChar(255) // Hachage du mot de passe
+  role             String    @db.VarChar(50) // 'admin', 'supervisor', 'team_member', 'client_contact'
+  firstName        String    @db.VarChar(255) // Ajout pour correspondance frontend
+  lastName         String    @db.VarChar(255) // Ajout pour correspondance frontend
+  phoneNumber      String?   @db.VarChar(50)  // Rendre optionnel si non requis pour tous les rôles au signup
+  position         String?   @db.VarChar(255) // Optional fields from frontend
+  department       String?   @db.VarChar(255) // Optional fields from frontend
+  companyId        String?   @map("company_id") @db.VarChar(36) // FK to Company (optional for now)
+  joinDate         DateTime  @default(now()) @db.DateTime(3)
+  avatarUrl        String?   @db.VarChar(255) // Optional
+  bio              String?   @db.Text         // Use Text for potentially long strings
+  skills           String[]  @default([]) // MySQL JSON type (requires >= 5.7)
+  certifications   String[]  @default([]) // MySQL JSON type
+  languages        String[]  @default([]) // MySQL JSON type
+
+  // Ajoutez d'autres champs si nécessaires et leurs types MySQL
+  // Ex: isAvailable Boolean? @default(true) pour les docteurs/infirmières
+
+  // Relations (nous les ajouterons plus tard pour Projets, Tâches, etc.)
+  company          Company?  @relation("CompanyUsers", fields: [companyId], references: [id])
+
+  // Liens vers d'autres modèles (à décommenter et ajuster au fur et à mesure)
+  // supervisedProjects Project[] @relation("ProjectSupervisor")
+  // assignedTasks      Task[]    @relation("TaskAssignees")
+  // organizedMeetings  Meeting[] @relation("MeetingOrganizer")
+  // participatedMeetings Meeting[] @relation("MeetingParticipants")
+  // participatedEvents Event[] @relation("EventParticipants")
+  // uploadedAttachments Attachment[]
+  // comments           Comment[]
+  // ... autres relations ...
+
+  @@index([companyId]) // Index pour la clé étrangère (bonne pratique)
+  @@map("users") // Nom de la table dans la base de données
+}
+
+// Modèle Company (minimal pour la relation avec User si applicable)
+model Company {
+   id                 String    @id @default(uuid()) @db.VarChar(36)
+   name               String    @unique @db.VarChar(255)
+   // Ajoutez d'autres champs de Company ici si nécessaire
+   users              User[]    @relation("CompanyUsers")
+
+   @@map("companies")
+}
+
+// Ajoutez d'autres modèles (Project, Task, etc.) ici au fur et à mesure
+</file>
+
+<file path="src/config/prismaClient.js">
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+// src/config/prismaClient.ts
+const client_1 = require("@prisma/client");
+const prisma = new client_1.PrismaClient();
+exports.default = prisma;
+</file>
+
+<file path="src/config/prismaClient.ts">
+// src/config/prismaClient.ts
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+export default prisma;
+</file>
+
+<file path="src/controllers/authController.js">
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.signin = exports.signup = void 0;
+const bcrypt_1 = __importDefault(require("bcrypt")); // Pour hacher/comparer les mots de passe
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken")); // Pour générer les tokens JWT
+const prismaClient_1 = __importDefault(require("../config/prismaClient")); // Notre instance du client Prisma
+require("dotenv/config"); // Assurez-vous que process.env.JWT_SECRET est chargé ici aussi si ce fichier est appelé directement
+const SALT_ROUNDS = 10; // Nombre de tours de salage pour bcrypt (un bon compromis)
+// --- Logique d'Inscription (Sign Up) ---
+const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // Récupère les données attendues du corps de la requête
+    const { firstName, lastName, email, password, role, phoneNumber, position, department, companyId, avatarUrl, bio, skills, certifications, languages } = req.body;
+    // Validation basique : vérifie les champs obligatoires pour une inscription de base
+    if (!firstName || !lastName || !email || !password || !role) {
+        console.log('❌ Signup validation failed: Missing required fields.');
+        return res.status(400).json({ message: 'Missing required fields: firstName, lastName, email, password, role.' });
+    }
+    // TODO: Ajouter une validation plus robuste des données (format email, force mot de passe, rôle valide, etc.)
+    // Exemple de validation de rôle simple :
+    const validRoles = ['admin', 'supervisor', 'team_member', 'client_contact']; // Définissez vos rôles valides ici
+    if (!validRoles.includes(role)) {
+        console.log('❌ Signup validation failed: Invalid role specified:', role);
+        return res.status(400).json({ message: `Invalid role. Allowed roles are: ${validRoles.join(', ')}.` });
+    }
+    // TODO: Gérer la logique `companyId` : trouver une entreprise existante ou en créer une si nécessaire.
+    // Pour l'instant, on l'inclut si présent dans la requête, mais sans validation FK côté application.
+    try {
+        // 1. Vérifier si un utilisateur avec cet email existe déjà
+        const existingUser = yield prismaClient_1.default.user.findUnique({
+            where: { email },
+        });
+        if (existingUser) {
+            console.log('❌ Signup failed: Email already in use:', email);
+            return res.status(409).json({ message: 'Email already in use.' }); // 409 Conflict
+        }
+        // 2. Hacher le mot de passe avant de le stocker
+        const passwordHash = yield bcrypt_1.default.hash(password, SALT_ROUNDS);
+        // 3. Créer le nouvel utilisateur dans la base de données
+        const newUser = yield prismaClient_1.default.user.create({
+            data: {
+                firstName,
+                lastName,
+                email,
+                passwordHash, // Stocke le hash, pas le mot de passe en clair
+                role,
+                phoneNumber, // Peut être null si optionnel dans le schéma
+                position, // Peut être null
+                department, // Peut être null
+                companyId, // Peut être null
+                // joinDate est définie par défaut dans le schéma (@default(now()))
+                avatarUrl, // Peut être null
+                bio, // Peut être null
+                // Gérer les listes (skills, certifications, languages)
+                // Si votre MySQL supporte JSON (>= 5.7) et votre schéma est String[]:
+                skills: skills || [], // Assurez-vous que c'est un tableau, même vide
+                certifications: certifications || [],
+                languages: languages || [],
+                // Si votre MySQL est < 5.7 et votre schéma est String?:
+                // skills: (skills as string[] | undefined)?.join(',') || '', // Convertir tableau en chaîne délimitée par virgules
+                // certifications: (certifications as string[] | undefined)?.join(',') || '',
+                // languages: (languages as string[] | undefined)?.join(',') || '',
+            },
+            // Sélectionne les champs à retourner, EXCLUANT le passwordHash pour la sécurité
+            select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+                role: true,
+                phoneNumber: true,
+                position: true,
+                department: true,
+                companyId: true,
+                joinDate: true,
+                avatarUrl: true,
+                bio: true,
+                skills: true, // Retourne le type stocké (tableau ou chaîne)
+                certifications: true,
+                languages: true,
+                // Ajoutez d'autres champs nécessaires au frontend
+            },
+        });
+        console.log(`✅ User created successfully: ${newUser.email} (${newUser.role}). ID: ${newUser.id}`);
+        // Réponse de succès (statut 201 Created)
+        res.status(201).json({ message: 'User created successfully.', user: newUser });
+    }
+    catch (error) {
+        console.error('❌ Signup error:', error);
+        // Gérer les erreurs spécifiques de Prisma si nécessaire (ex: violation de contrainte unique autre que l'email)
+        res.status(500).json({ message: 'Internal server error during signup.', error: error.message });
+    }
+});
+exports.signup = signup;
+// --- Logique de Connexion (Sign In) ---
+const signin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, password, role } = req.body; // Récupère email et mot de passe (et optionnellement le rôle si le frontend l'envoie)
+    // Validation basique
+    if (!email || !password) {
+        console.log('❌ Signin validation failed: Email and password are required.');
+        return res.status(400).json({ message: 'Email and password are required.' });
+    }
+    try {
+        // 1. Trouver l'utilisateur par email
+        const user = yield prismaClient_1.default.user.findUnique({
+            where: { email },
+        });
+        // Si l'utilisateur n'existe pas OU si le mot de passe est incorrect
+        // Utilisez le MÊME message d'erreur pour les deux cas afin de ne pas donner d'indices aux attaquants.
+        if (!user || !(yield bcrypt_1.default.compare(password, user.passwordHash))) {
+            console.log(`❌ Signin failed for email "${email}": Invalid credentials.`);
+            return res.status(401).json({ message: 'Invalid credentials.' }); // 401 Unauthorized
+        }
+        // TODO: Si votre logique frontend l'exige, vous pourriez ajouter une vérification ici
+        // pour s'assurer que l'utilisateur a bien le rôle attendu.
+        // Ex: if (role && user.role !== role) {
+        //    console.log(`❌ Signin failed for user ${user.email}: Attempted login with role "${role}" but actual role is "${user.role}".`);
+        //    return res.status(403).json({ message: 'Forbidden role for this user.' }); // 403 Forbidden
+        // }
+        // Si le frontend n'envoie pas le rôle, sautez cette vérification.
+        // 2. Générer un JSON Web Token (JWT)
+        const token = jsonwebtoken_1.default.sign({ id: user.id, role: user.role }, // Le payload minimal : ID unique et rôle
+        process.env.JWT_SECRET, // La clé secrète (assurez-vous qu'elle est définie dans .env)
+        { expiresIn: '1d' } // Le token expire après 1 jour
+        );
+        console.log(`✅ Signin successful for user: ${user.email} (${user.role}). ID: ${user.id}. Token generated.`);
+        // 3. Renvoyer le token et des informations utilisateur basiques au frontend
+        res.status(200).json({
+            message: 'Login successful.',
+            token, // Le token est envoyé au frontend (souvent stocké en Local Storage ou dans un cookie JS géré par le frontend)
+            user: {
+                id: user.id,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                role: user.role,
+                avatarUrl: user.avatarUrl, // Inclure le chemin de l'image de profil
+                companyId: user.companyId, // Inclure l'ID de l'entreprise
+                phoneNumber: user.phoneNumber, // Inclure le numéro de téléphone
+                position: user.position,
+                department: user.department,
+                joinDate: user.joinDate,
+                bio: user.bio,
+                skills: user.skills, // Selon le schéma (tableau ou chaîne)
+                certifications: user.certifications,
+                languages: user.languages,
+                // Ajoutez d'autres champs ici si le frontend en a besoin immédiatement après la connexion
+            },
+        });
+    }
+    catch (error) {
+        console.error('❌ Signin error:', error);
+        res.status(500).json({ message: 'Internal server error during signin.', error: error.message });
+    }
+});
+exports.signin = signin;
+// TODO: Ajouter d'autres contrôleurs liés à l'auth ici (ex: logout, forgotPassword, resetPassword, verifyEmail, etc.)
+</file>
+
+<file path="src/controllers/authController.ts">
+// src/controllers/authController.ts
+import { Request, Response } from 'express';
+import bcrypt from 'bcrypt'; // Pour hacher/comparer les mots de passe
+import jwt from 'jsonwebtoken'; // Pour générer les tokens JWT
+import prisma from '../config/prismaClient'; // Notre instance du client Prisma
+import 'dotenv/config'; // Assurez-vous que process.env.JWT_SECRET est chargé ici aussi si ce fichier est appelé directement
+
+const SALT_ROUNDS = 10; // Nombre de tours de salage pour bcrypt (un bon compromis)
+
+// --- Logique d'Inscription (Sign Up) ---
+export const signup = async (req: Request, res: Response) => {
+  // Récupère les données attendues du corps de la requête
+  const { firstName, lastName, email, password, role, phoneNumber, position, department, companyId, avatarUrl, bio, skills, certifications, languages } = req.body;
+
+  // Validation basique : vérifie les champs obligatoires pour une inscription de base
+  if (!firstName || !lastName || !email || !password || !role) {
+    console.log('❌ Signup validation failed: Missing required fields.');
+    return res.status(400).json({ message: 'Missing required fields: firstName, lastName, email, password, role.' });
+  }
+
+  // TODO: Ajouter une validation plus robuste des données (format email, force mot de passe, rôle valide, etc.)
+  // Exemple de validation de rôle simple :
+  const validRoles = ['admin', 'supervisor', 'team_member', 'client_contact']; // Définissez vos rôles valides ici
+   if (!validRoles.includes(role)) {
+       console.log('❌ Signup validation failed: Invalid role specified:', role);
+       return res.status(400).json({ message: `Invalid role. Allowed roles are: ${validRoles.join(', ')}.` });
+   }
+
+  // TODO: Gérer la logique `companyId` : trouver une entreprise existante ou en créer une si nécessaire.
+  // Pour l'instant, on l'inclut si présent dans la requête, mais sans validation FK côté application.
+
+  try {
+    // 1. Vérifier si un utilisateur avec cet email existe déjà
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (existingUser) {
+       console.log('❌ Signup failed: Email already in use:', email);
+      return res.status(409).json({ message: 'Email already in use.' }); // 409 Conflict
+    }
+
+    // 2. Hacher le mot de passe avant de le stocker
+    const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
+
+    // 3. Créer le nouvel utilisateur dans la base de données
+    const newUser = await prisma.user.create({
+      data: {
+        firstName,
+        lastName,
+        email,
+        passwordHash, // Stocke le hash, pas le mot de passe en clair
+        role,
+        phoneNumber, // Peut être null si optionnel dans le schéma
+        position,    // Peut être null
+        department,  // Peut être null
+        companyId,   // Peut être null
+        // joinDate est définie par défaut dans le schéma (@default(now()))
+        avatarUrl, // Peut être null
+        bio,       // Peut être null
+
+        // Gérer les listes (skills, certifications, languages)
+        // Si votre MySQL supporte JSON (>= 5.7) et votre schéma est String[]:
+        skills: skills || [], // Assurez-vous que c'est un tableau, même vide
+        certifications: certifications || [],
+        languages: languages || [],
+        // Si votre MySQL est < 5.7 et votre schéma est String?:
+        // skills: (skills as string[] | undefined)?.join(',') || '', // Convertir tableau en chaîne délimitée par virgules
+        // certifications: (certifications as string[] | undefined)?.join(',') || '',
+        // languages: (languages as string[] | undefined)?.join(',') || '',
+      },
+      // Sélectionne les champs à retourner, EXCLUANT le passwordHash pour la sécurité
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        role: true,
+        phoneNumber: true,
+        position: true,
+        department: true,
+        companyId: true,
+        joinDate: true,
+        avatarUrl: true,
+        bio: true,
+        skills: true, // Retourne le type stocké (tableau ou chaîne)
+        certifications: true,
+        languages: true,
+        // Ajoutez d'autres champs nécessaires au frontend
+      },
+    });
+
+    console.log(`✅ User created successfully: ${newUser.email} (${newUser.role}). ID: ${newUser.id}`);
+    // Réponse de succès (statut 201 Created)
+    res.status(201).json({ message: 'User created successfully.', user: newUser });
+
+  } catch (error: any) {
+    console.error('❌ Signup error:', error);
+    // Gérer les erreurs spécifiques de Prisma si nécessaire (ex: violation de contrainte unique autre que l'email)
+    res.status(500).json({ message: 'Internal server error during signup.', error: error.message });
+  }
+};
+
+// --- Logique de Connexion (Sign In) ---
+export const signin = async (req: Request, res: Response) => {
+  const { email, password, role } = req.body; // Récupère email et mot de passe (et optionnellement le rôle si le frontend l'envoie)
+
+  // Validation basique
+  if (!email || !password) {
+    console.log('❌ Signin validation failed: Email and password are required.');
+    return res.status(400).json({ message: 'Email and password are required.' });
+  }
+
+  try {
+    // 1. Trouver l'utilisateur par email
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    // Si l'utilisateur n'existe pas OU si le mot de passe est incorrect
+    // Utilisez le MÊME message d'erreur pour les deux cas afin de ne pas donner d'indices aux attaquants.
+    if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
+      console.log(`❌ Signin failed for email "${email}": Invalid credentials.`);
+      return res.status(401).json({ message: 'Invalid credentials.' }); // 401 Unauthorized
+    }
+
+    // TODO: Si votre logique frontend l'exige, vous pourriez ajouter une vérification ici
+    // pour s'assurer que l'utilisateur a bien le rôle attendu.
+    // Ex: if (role && user.role !== role) {
+    //    console.log(`❌ Signin failed for user ${user.email}: Attempted login with role "${role}" but actual role is "${user.role}".`);
+    //    return res.status(403).json({ message: 'Forbidden role for this user.' }); // 403 Forbidden
+    // }
+    // Si le frontend n'envoie pas le rôle, sautez cette vérification.
+
+    // 2. Générer un JSON Web Token (JWT)
+    const token = jwt.sign(
+      { id: user.id, role: user.role }, // Le payload minimal : ID unique et rôle
+      process.env.JWT_SECRET as string, // La clé secrète (assurez-vous qu'elle est définie dans .env)
+      { expiresIn: '1d' } // Le token expire après 1 jour
+    );
+
+    console.log(`✅ Signin successful for user: ${user.email} (${user.role}). ID: ${user.id}. Token generated.`);
+
+    // 3. Renvoyer le token et des informations utilisateur basiques au frontend
+    res.status(200).json({
+      message: 'Login successful.',
+      token, // Le token est envoyé au frontend (souvent stocké en Local Storage ou dans un cookie JS géré par le frontend)
+      user: { // Informations basiques de l'utilisateur (sans le hash du mot de passe)
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        role: user.role,
+        avatarUrl: user.avatarUrl, // Inclure le chemin de l'image de profil
+        companyId: user.companyId, // Inclure l'ID de l'entreprise
+        phoneNumber: user.phoneNumber, // Inclure le numéro de téléphone
+        position: user.position,
+        department: user.department,
+        joinDate: user.joinDate,
+        bio: user.bio,
+        skills: user.skills, // Selon le schéma (tableau ou chaîne)
+        certifications: user.certifications,
+        languages: user.languages,
+        // Ajoutez d'autres champs ici si le frontend en a besoin immédiatement après la connexion
+      },
+    });
+
+  } catch (error: any) {
+    console.error('❌ Signin error:', error);
+    res.status(500).json({ message: 'Internal server error during signin.', error: error.message });
+  }
+};
+
+// TODO: Ajouter d'autres contrôleurs liés à l'auth ici (ex: logout, forgotPassword, resetPassword, verifyEmail, etc.)
+</file>
+
+<file path="src/index.js">
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+// src/index.ts
+require("dotenv/config"); // Charge les variables d'environnement depuis .env au démarrage
+const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors")); // Importe le middleware CORS
+// Importe les routes d'authentification
+const authRoutes_1 = __importDefault(require("./routes/authRoutes"));
+// TODO: Importer d'autres fichiers de routes ici au fur et à mesure (ex: projectRoutes, userRoutes, etc.)
+const app = (0, express_1.default)();
+const port = process.env.PORT || 3000; // Définit le port (utilise la variable d'environnement ou 3000 par défaut)
+// --- Middlewares globaux ---
+// Utilise le middleware CORS pour permettre les requêtes depuis le frontend
+// Configurez l'origine pour qu'elle corresponde à l'URL de votre frontend (important pour les cookies et autres)
+app.use((0, cors_1.default)({
+    origin: 'http://localhost:5173', // ou l'URL de votre frontend ProjectFlow
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Méthodes HTTP autorisées
+    allowedHeaders: ['Content-Type', 'Authorization'], // Headers autorisés (important pour JWT)
+    credentials: true // Permet l'envoi de cookies et d'en-têtes d'autorisation
+}));
+// Middleware pour parser les corps de requête en JSON
+app.use(express_1.default.json());
+// TODO: Ajouter d'autres middlewares globaux ici (ex: cookie-parser si vous utilisez des cookies)
+// --- Montage des routes ---
+// Monte les routes d'authentification sous le préfixe /api/auth
+app.use('/api/auth', authRoutes_1.default);
+// TODO: Monter d'autres fichiers de routes ici sous leurs préfixes appropriés
+// Ex: app.use('/api/projects', projectRoutes);
+// Ex: app.use('/api/users', userRoutes);
+// Route de test basique pour vérifier que le serveur fonctionne
+app.get('/', (req, res) => {
+    res.send('ProjectFlow Backend is running!');
+});
+// TODO: Ajouter des middlewares de gestion d'erreurs
+// --- Démarrage du serveur ---
+app.listen(port, () => {
+    console.log(`🚀 ProjectFlow Backend server running on port ${port}`);
+    console.log(`⚙️  Access Auth API at http://localhost:${port}/api/auth`);
+    // TODO: Ajouter d'autres URLs d'API ici au fur et à mesure
+});
+</file>
+
+<file path="src/index.ts">
+// src/index.ts
+import 'dotenv/config'; // Charge les variables d'environnement depuis .env au démarrage
+import express from 'express';
+import cors from 'cors'; // Importe le middleware CORS
+// Importe les routes d'authentification
+import authRoutes from './routes/authRoutes';
+// TODO: Importer d'autres fichiers de routes ici au fur et à mesure (ex: projectRoutes, userRoutes, etc.)
+
+const app = express();
+const port = process.env.PORT || 3000; // Définit le port (utilise la variable d'environnement ou 3000 par défaut)
+
+// --- Middlewares globaux ---
+// Utilise le middleware CORS pour permettre les requêtes depuis le frontend
+// Configurez l'origine pour qu'elle corresponde à l'URL de votre frontend (important pour les cookies et autres)
+app.use(cors({
+  origin: 'http://localhost:5173', // ou l'URL de votre frontend ProjectFlow
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Méthodes HTTP autorisées
+  allowedHeaders: ['Content-Type', 'Authorization'], // Headers autorisés (important pour JWT)
+  credentials: true // Permet l'envoi de cookies et d'en-têtes d'autorisation
+}));
+
+// Middleware pour parser les corps de requête en JSON
+app.use(express.json());
+
+// TODO: Ajouter d'autres middlewares globaux ici (ex: cookie-parser si vous utilisez des cookies)
+
+// --- Montage des routes ---
+// Monte les routes d'authentification sous le préfixe /api/auth
+app.use('/api/auth', authRoutes);
+
+// TODO: Monter d'autres fichiers de routes ici sous leurs préfixes appropriés
+// Ex: app.use('/api/projects', projectRoutes);
+// Ex: app.use('/api/users', userRoutes);
+
+// Route de test basique pour vérifier que le serveur fonctionne
+app.get('/', (req, res) => {
+  res.send('ProjectFlow Backend is running!');
+});
+
+// TODO: Ajouter des middlewares de gestion d'erreurs
+
+// --- Démarrage du serveur ---
+app.listen(port, () => {
+  console.log(`🚀 ProjectFlow Backend server running on port ${port}`);
+  console.log(`⚙️  Access Auth API at http://localhost:${port}/api/auth`);
+  // TODO: Ajouter d'autres URLs d'API ici au fur et à mesure
+});
+</file>
+
+<file path="src/middleware/authMiddleware.js">
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.authorize = exports.authenticateToken = void 0;
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+require("dotenv/config"); // Charge les variables d'environnement
+const authenticateToken = (req, res, next) => {
+    // Récupère le token du header Authorization (Format standard: Bearer TOKEN)
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1]; // Sépare "Bearer" du token
+    // Si aucun token n'est présent, l'utilisateur n'est pas authentifié
+    if (token == null) {
+        // console.log("❌ Authentication failed: No token provided."); // Log pour le debug serveur
+        return res.sendStatus(401); // 401 Unauthorized
+    }
+    // Vérifie la validité du token en utilisant la clé secrète
+    jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET, (err, userPayload) => {
+        if (err) {
+            // console.error("❌ JWT verification failed:", err.message); // Log pour le debug serveur
+            // Si la vérification échoue (token expiré, signature invalide, etc.)
+            return res.sendStatus(403); // 403 Forbidden
+        }
+        // Si le token est valide, le payload (userPayload) est décodé.
+        // Attache le payload décodé à l'objet request pour qu'il soit disponible dans les gestionnaires de route suivants
+        // On le cast au type défini dans le 'declare global'
+        req.user = userPayload;
+        // console.log(`✅ Token authenticated for user ID: ${req.user.id}, role: ${req.user.role}`); // Log pour le debug serveur
+        // Passe au middleware ou au gestionnaire de route suivant
+        next();
+    });
+};
+exports.authenticateToken = authenticateToken;
+// Exemple de middleware d'autorisation basé sur les rôles (RBAC)
+// Utilisez-le APRÈS authenticateToken pour restreindre l'accès à certains rôles
+const authorize = (allowedRoles) => {
+    return (req, res, next) => {
+        // S'assure que authenticateToken a déjà été exécuté et que req.user est défini
+        if (!req.user) {
+            // Ceci ne devrait pas arriver si le middleware est bien chaîné (authenticateToken -> authorize -> route handler)
+            console.error("❌ Authorization check failed: req.user is undefined. Is authenticateToken missing?");
+            return res.sendStatus(500); // Erreur interne si le middleware n'est pas chaîné correctement
+        }
+        // Vérifie si le rôle de l'utilisateur est dans la liste des rôles autorisés
+        if (allowedRoles.includes(req.user.role)) {
+            // console.log(`✅ Authorization successful for user ID ${req.user.id}: Role "${req.user.role}" is allowed.`);
+            next(); // Rôle autorisé, passer au gestionnaire de route
+        }
+        else {
+            // console.log(`❌ Authorization failed for user ID ${req.user.id}: Role "${req.user.role}" not in allowed roles [${allowedRoles.join(', ')}].`);
+            return res.sendStatus(403); // 403 Forbidden (accès refusé)
+        }
+    };
+};
+exports.authorize = authorize;
+</file>
+
+<file path="src/middleware/authMiddleware.ts">
+// src/middleware/authMiddleware.ts
+import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
+import 'dotenv/config'; // Charge les variables d'environnement
+
+// IMPORTANT: Étend l'interface Request d'Express pour ajouter la propriété 'user'
+// Cela permet à TypeScript de savoir que req.user existe après le middleware
+declare global {
+  namespace Express {
+    interface Request {
+      user?: {
+        id: string; // L'ID de l'utilisateur tel que stocké dans le payload du JWT
+        role: string; // Le rôle de l'utilisateur tel que stocké dans le payload du JWT
+        // Ajoutez ici d'autres propriétés si vous les incluez dans le payload JWT et en avez besoin dans req.user
+      };
+    }
+  }
+}
+
+export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
+  // Récupère le token du header Authorization (Format standard: Bearer TOKEN)
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]; // Sépare "Bearer" du token
+
+  // Si aucun token n'est présent, l'utilisateur n'est pas authentifié
+  if (token == null) {
+    // console.log("❌ Authentication failed: No token provided."); // Log pour le debug serveur
+    return res.sendStatus(401); // 401 Unauthorized
+  }
+
+  // Vérifie la validité du token en utilisant la clé secrète
+  jwt.verify(token, process.env.JWT_SECRET as string, (err, userPayload) => {
+    if (err) {
+      // console.error("❌ JWT verification failed:", err.message); // Log pour le debug serveur
+      // Si la vérification échoue (token expiré, signature invalide, etc.)
+      return res.sendStatus(403); // 403 Forbidden
+    }
+
+    // Si le token est valide, le payload (userPayload) est décodé.
+    // Attache le payload décodé à l'objet request pour qu'il soit disponible dans les gestionnaires de route suivants
+    // On le cast au type défini dans le 'declare global'
+    req.user = userPayload as { id: string; role: string; };
+
+    // console.log(`✅ Token authenticated for user ID: ${req.user.id}, role: ${req.user.role}`); // Log pour le debug serveur
+
+    // Passe au middleware ou au gestionnaire de route suivant
+    next();
+  });
+};
+
+// Exemple de middleware d'autorisation basé sur les rôles (RBAC)
+// Utilisez-le APRÈS authenticateToken pour restreindre l'accès à certains rôles
+export const authorize = (allowedRoles: string[]) => {
+    return (req: Request, res: Response, next: NextFunction) => {
+         // S'assure que authenticateToken a déjà été exécuté et que req.user est défini
+        if (!req.user) {
+            // Ceci ne devrait pas arriver si le middleware est bien chaîné (authenticateToken -> authorize -> route handler)
+            console.error("❌ Authorization check failed: req.user is undefined. Is authenticateToken missing?");
+            return res.sendStatus(500); // Erreur interne si le middleware n'est pas chaîné correctement
+        }
+
+        // Vérifie si le rôle de l'utilisateur est dans la liste des rôles autorisés
+        if (allowedRoles.includes(req.user.role)) {
+            // console.log(`✅ Authorization successful for user ID ${req.user.id}: Role "${req.user.role}" is allowed.`);
+            next(); // Rôle autorisé, passer au gestionnaire de route
+        } else {
+            // console.log(`❌ Authorization failed for user ID ${req.user.id}: Role "${req.user.role}" not in allowed roles [${allowedRoles.join(', ')}].`);
+            return res.sendStatus(403); // 403 Forbidden (accès refusé)
+        }
+    };
+};
+</file>
+
+<file path="src/routes/authRoutes.js">
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+// src/routes/authRoutes.ts
+const express_1 = require("express");
+const authController_1 = require("../controllers/authController"); // Importe les contrôleurs
+const router = (0, express_1.Router)();
+// Route pour l'inscription (POST /api/auth/signup)
+router.post('/signup', authController_1.signup);
+// Route pour la connexion (POST /api/auth/signin)
+router.post('/signin', authController_1.signin);
+// TODO: Ajouter d'autres routes d'authentification ici (ex: forgot-password, reset-password, verify-email, etc.)
+exports.default = router;
+</file>
+
+<file path="src/routes/authRoutes.ts">
+// src/routes/authRoutes.ts
+import { Router } from 'express';
+import { signin, signup } from '../controllers/authController'; // Importe les contrôleurs
+
+const router = Router();
+
+// Route pour l'inscription (POST /api/auth/signup)
+router.post('/signup', signup);
+
+// Route pour la connexion (POST /api/auth/signin)
+router.post('/signin', signin);
+
+// TODO: Ajouter d'autres routes d'authentification ici (ex: forgot-password, reset-password, verify-email, etc.)
+
+export default router;
+</file>
+
+<file path="tsconfig.json">
+{
+  "compilerOptions": {
+    /* Visit https://aka.ms/tsconfig to read more about this file */
+
+    /* Projects */
+    // "incremental": true,                              /* Save .tsbuildinfo files to allow for incremental compilation of projects. */
+    // "composite": true,                                /* Enable constraints that allow a TypeScript project to be used with project references. */
+    // "tsBuildInfoFile": "./.tsbuildinfo",              /* Specify the path to .tsbuildinfo incremental compilation file. */
+    // "disableSourceOfProjectReferenceRedirect": true,  /* Disable preferring source files instead of declaration files when referencing composite projects. */
+    // "disableSolutionSearching": true,                 /* Opt a project out of multi-project reference checking when editing. */
+    // "disableReferencedProjectLoad": true,             /* Reduce the number of projects loaded automatically by TypeScript. */
+
+    /* Language and Environment */
+    "target": "es2016",                                  /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
+    // "lib": [],                                        /* Specify a set of bundled library declaration files that describe the target runtime environment. */
+    // "jsx": "preserve",                                /* Specify what JSX code is generated. */
+    // "libReplacement": true,                           /* Enable lib replacement. */
+    // "experimentalDecorators": true,                   /* Enable experimental support for legacy experimental decorators. */
+    // "emitDecoratorMetadata": true,                    /* Emit design-type metadata for decorated declarations in source files. */
+    // "jsxFactory": "",                                 /* Specify the JSX factory function used when targeting React JSX emit, e.g. 'React.createElement' or 'h'. */
+    // "jsxFragmentFactory": "",                         /* Specify the JSX Fragment reference used for fragments when targeting React JSX emit e.g. 'React.Fragment' or 'Fragment'. */
+    // "jsxImportSource": "",                            /* Specify module specifier used to import the JSX factory functions when using 'jsx: react-jsx*'. */
+    // "reactNamespace": "",                             /* Specify the object invoked for 'createElement'. This only applies when targeting 'react' JSX emit. */
+    // "noLib": true,                                    /* Disable including any library files, including the default lib.d.ts. */
+    // "useDefineForClassFields": true,                  /* Emit ECMAScript-standard-compliant class fields. */
+    // "moduleDetection": "auto",                        /* Control what method is used to detect module-format JS files. */
+
+    /* Modules */
+    "module": "commonjs",                                /* Specify what module code is generated. */
+    // "rootDir": "./",                                  /* Specify the root folder within your source files. */
+    // "moduleResolution": "node10",                     /* Specify how TypeScript looks up a file from a given module specifier. */
+    // "baseUrl": "./",                                  /* Specify the base directory to resolve non-relative module names. */
+    // "paths": {},                                      /* Specify a set of entries that re-map imports to additional lookup locations. */
+    // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
+    // "typeRoots": [],                                  /* Specify multiple folders that act like './node_modules/@types'. */
+    // "types": [],                                      /* Specify type package names to be included without being referenced in a source file. */
+    // "allowUmdGlobalAccess": true,                     /* Allow accessing UMD globals from modules. */
+    // "moduleSuffixes": [],                             /* List of file name suffixes to search when resolving a module. */
+    // "allowImportingTsExtensions": true,               /* Allow imports to include TypeScript file extensions. Requires '--moduleResolution bundler' and either '--noEmit' or '--emitDeclarationOnly' to be set. */
+    // "rewriteRelativeImportExtensions": true,          /* Rewrite '.ts', '.tsx', '.mts', and '.cts' file extensions in relative import paths to their JavaScript equivalent in output files. */
+    // "resolvePackageJsonExports": true,                /* Use the package.json 'exports' field when resolving package imports. */
+    // "resolvePackageJsonImports": true,                /* Use the package.json 'imports' field when resolving imports. */
+    // "customConditions": [],                           /* Conditions to set in addition to the resolver-specific defaults when resolving imports. */
+    // "noUncheckedSideEffectImports": true,             /* Check side effect imports. */
+    // "resolveJsonModule": true,                        /* Enable importing .json files. */
+    // "allowArbitraryExtensions": true,                 /* Enable importing files with any extension, provided a declaration file is present. */
+    // "noResolve": true,                                /* Disallow 'import's, 'require's or '<reference>'s from expanding the number of files TypeScript should add to a project. */
+
+    /* JavaScript Support */
+    // "allowJs": true,                                  /* Allow JavaScript files to be a part of your program. Use the 'checkJS' option to get errors from these files. */
+    // "checkJs": true,                                  /* Enable error reporting in type-checked JavaScript files. */
+    // "maxNodeModuleJsDepth": 1,                        /* Specify the maximum folder depth used for checking JavaScript files from 'node_modules'. Only applicable with 'allowJs'. */
+
+    /* Emit */
+    // "declaration": true,                              /* Generate .d.ts files from TypeScript and JavaScript files in your project. */
+    // "declarationMap": true,                           /* Create sourcemaps for d.ts files. */
+    // "emitDeclarationOnly": true,                      /* Only output d.ts files and not JavaScript files. */
+    // "sourceMap": true,                                /* Create source map files for emitted JavaScript files. */
+    // "inlineSourceMap": true,                          /* Include sourcemap files inside the emitted JavaScript. */
+    // "noEmit": true,                                   /* Disable emitting files from a compilation. */
+    // "outFile": "./",                                  /* Specify a file that bundles all outputs into one JavaScript file. If 'declaration' is true, also designates a file that bundles all .d.ts output. */
+    // "outDir": "./",                                   /* Specify an output folder for all emitted files. */
+    // "removeComments": true,                           /* Disable emitting comments. */
+    // "importHelpers": true,                            /* Allow importing helper functions from tslib once per project, instead of including them per-file. */
+    // "downlevelIteration": true,                       /* Emit more compliant, but verbose and less performant JavaScript for iteration. */
+    // "sourceRoot": "",                                 /* Specify the root path for debuggers to find the reference source code. */
+    // "mapRoot": "",                                    /* Specify the location where debugger should locate map files instead of generated locations. */
+    // "inlineSources": true,                            /* Include source code in the sourcemaps inside the emitted JavaScript. */
+    // "emitBOM": true,                                  /* Emit a UTF-8 Byte Order Mark (BOM) in the beginning of output files. */
+    // "newLine": "crlf",                                /* Set the newline character for emitting files. */
+    // "stripInternal": true,                            /* Disable emitting declarations that have '@internal' in their JSDoc comments. */
+    // "noEmitHelpers": true,                            /* Disable generating custom helper functions like '__extends' in compiled output. */
+    // "noEmitOnError": true,                            /* Disable emitting files if any type checking errors are reported. */
+    // "preserveConstEnums": true,                       /* Disable erasing 'const enum' declarations in generated code. */
+    // "declarationDir": "./",                           /* Specify the output directory for generated declaration files. */
+
+    /* Interop Constraints */
+    // "isolatedModules": true,                          /* Ensure that each file can be safely transpiled without relying on other imports. */
+    // "verbatimModuleSyntax": true,                     /* Do not transform or elide any imports or exports not marked as type-only, ensuring they are written in the output file's format based on the 'module' setting. */
+    // "isolatedDeclarations": true,                     /* Require sufficient annotation on exports so other tools can trivially generate declaration files. */
+    // "erasableSyntaxOnly": true,                       /* Do not allow runtime constructs that are not part of ECMAScript. */
+    // "allowSyntheticDefaultImports": true,             /* Allow 'import x from y' when a module doesn't have a default export. */
+    "esModuleInterop": true,                             /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */
+    // "preserveSymlinks": true,                         /* Disable resolving symlinks to their realpath. This correlates to the same flag in node. */
+    "forceConsistentCasingInFileNames": true,            /* Ensure that casing is correct in imports. */
+
+    /* Type Checking */
+    "strict": true,                                      /* Enable all strict type-checking options. */
+    // "noImplicitAny": true,                            /* Enable error reporting for expressions and declarations with an implied 'any' type. */
+    // "strictNullChecks": true,                         /* When type checking, take into account 'null' and 'undefined'. */
+    // "strictFunctionTypes": true,                      /* When assigning functions, check to ensure parameters and the return values are subtype-compatible. */
+    // "strictBindCallApply": true,                      /* Check that the arguments for 'bind', 'call', and 'apply' methods match the original function. */
+    // "strictPropertyInitialization": true,             /* Check for class properties that are declared but not set in the constructor. */
+    // "strictBuiltinIteratorReturn": true,              /* Built-in iterators are instantiated with a 'TReturn' type of 'undefined' instead of 'any'. */
+    // "noImplicitThis": true,                           /* Enable error reporting when 'this' is given the type 'any'. */
+    // "useUnknownInCatchVariables": true,               /* Default catch clause variables as 'unknown' instead of 'any'. */
+    // "alwaysStrict": true,                             /* Ensure 'use strict' is always emitted. */
+    // "noUnusedLocals": true,                           /* Enable error reporting when local variables aren't read. */
+    // "noUnusedParameters": true,                       /* Raise an error when a function parameter isn't read. */
+    // "exactOptionalPropertyTypes": true,               /* Interpret optional property types as written, rather than adding 'undefined'. */
+    // "noImplicitReturns": true,                        /* Enable error reporting for codepaths that do not explicitly return in a function. */
+    // "noFallthroughCasesInSwitch": true,               /* Enable error reporting for fallthrough cases in switch statements. */
+    // "noUncheckedIndexedAccess": true,                 /* Add 'undefined' to a type when accessed using an index. */
+    // "noImplicitOverride": true,                       /* Ensure overriding members in derived classes are marked with an override modifier. */
+    // "noPropertyAccessFromIndexSignature": true,       /* Enforces using indexed accessors for keys declared using an indexed type. */
+    // "allowUnusedLabels": true,                        /* Disable error reporting for unused labels. */
+    // "allowUnreachableCode": true,                     /* Disable error reporting for unreachable code. */
+
+    /* Completeness */
+    // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
+    "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
+  }
+}
+</file>
+
+</files>

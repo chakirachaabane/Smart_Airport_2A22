@@ -1,0 +1,126 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql" // 
+  url      = env("DATABASE_URL") 
+}
+
+// Modèle Utilisateur basé sur les besoins de signup/signin et les rôles
+model User {
+  id             String    @id @default(uuid()) @db.VarChar(36)
+  email          String    @unique @db.VarChar(255)
+  passwordHash   String    @db.VarChar(255)
+  role           String    @db.VarChar(50)
+  firstName      String    @db.VarChar(255)
+  lastName       String    @db.VarChar(255)
+  phoneNumber    String?   @db.VarChar(50)
+  position       String?   @db.VarChar(255)
+  department     String?   @db.VarChar(255)
+  companyId      String?   @map("company_id") @db.VarChar(36)
+  joinDate       DateTime  @default(now()) @db.DateTime(3)
+  avatarUrl      String?   @db.VarChar(255)
+   address          String?   @db.VarChar(255)
+  bio            String?   @db.Text
+
+  skills         String?   @db.Text
+  certifications String?   @db.Text
+  languages      String?   @db.Text
+
+  company        Company?  @relation("CompanyUsers", fields: [companyId], references: [id])
+
+ assignedTasks    Task[]    @relation("TaskAssignees")
+  @@index([companyId])
+  @@map("users")
+}
+
+
+// Modèle Company (minimal pour la relation avec User si applicable)
+model Company {
+   id                 String    @id @default(uuid()) @db.VarChar(36)
+   name               String    @unique @db.VarChar(255)
+   // Ajoutez d'autres champs de Company ici si nécessaire
+   users              User[]    @relation("CompanyUsers")
+
+   @@map("companies")
+}
+
+// Ajoutez d'autres modèles (Project, Task, etc.) ici au fur et à mesure
+// prisma/schema.prisma
+
+model Project {
+  id                      String    @id @default(uuid()) @db.VarChar(36)
+  // Champs de l'Excel et du formulaire de base
+  nomProjet               String    @db.VarChar(255) // Excel: Projets | Form: Nom du projet
+  societe                 String?   @db.VarChar(255) // Excel: Sociétés | Form: Client (sera "Société" dans le form)
+  responsableRealisation  String?   @db.VarChar(255) // Excel: Responsable réalisation | Form: Superviseur (sera "Responsable réalisation")
+  priorite                String?   @db.VarChar(50)   // Excel: Priorités | Form: Priorité
+  dateDebutPrevue         DateTime?                  // Excel: Date début prévue | Form: Date de début
+  dateFinPrevue           DateTime?                  // Excel: Date fin prévue | Form: Date de fin
+  commentaires            String?   @db.Text          // Excel: Commentaires | Form: Description (sera "Commentaires")
+
+  // Champs uniquement du formulaire manuel (si pas dans Excel ou différents)
+  budget                  Float?                     // Form: Budget (€)
+  materials               String?   @db.Text          // Form: Matériaux utilisés
+  materialBudget          Float?                     // Form: Budget matériaux (TND)
+
+  // Nouveaux champs spécifiques à l'Excel (à ajouter au formulaire manuel si pertinent)
+  validite                String?   @db.VarChar(50)   // Excel: Validité
+  serviceDemandeur        String?   @db.VarChar(255) // Excel: Service demandeur
+  demandeur               String?   @db.VarChar(255) // Excel: Demandeur (NOUVEAU FORMULAIRE)
+  site                    String?   @db.VarChar(255) // Excel: Sites
+  unite                   String?   @db.VarChar(255) // Excel: Unités
+  intervenant             String?   @db.VarChar(255) // Excel: Intervenant (NOUVEAU FORMULAIRE)
+  etat                    String?   @db.VarChar(100)  // Excel: Etat
+  pourcentageAvance       Int?                       // Excel: Pourcentage d'avance
+  dateDebutReelle         DateTime?                  // Excel: Date Débu (Réelle)
+  dateFinReelle           DateTime?                  // Excel: Date fin (Réelle)
+
+  // Champs de l'ancien formulaire statique (à réconcilier ou supprimer si couverts)
+  // client                  String?   @db.VarChar(255) // Déjà couvert par 'societe'
+  // supervisor              String?   @db.VarChar(255) // Déjà couvert par 'responsableRealisation'
+  tasks                   Task[] 
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+
+  @@map("projects")
+}
+enum TaskStatusPrisma { // Renommé pour éviter conflit avec type frontend
+  PENDING
+  IN_PROGRESS
+  REVIEW
+  COMPLETED
+  DELAYED // Ajouté pour correspondre à votre besoin Gantt
+}
+model Task {
+  id          String            @id @default(uuid()) @db.VarChar(36)
+  nom         String            @db.VarChar(255) // 'name' dans GanttTaskForDisplay
+  description String?           @db.Text
+  startDate   DateTime
+  endDate     DateTime
+  progress    Int               @default(0)
+  status      TaskStatusPrisma  @default(PENDING) // 'status' dans GanttTaskForDisplay
+  priority    String?           @db.VarChar(50) // 'low', 'medium', 'high'
+
+  projectId   String            @db.VarChar(36)
+  project     Project           @relation(fields: [projectId], references: [id], onDelete: Cascade) // Si une tâche doit être supprimée quand le projet l'est
+
+  assigneeId  String?           @db.VarChar(36) // Optionnel si une tâche peut ne pas être assignée
+  assignee    User?             @relation("TaskAssignees", fields: [assigneeId], references: [id])
+
+  // Pour les dépendances, c'est plus complexe.
+  // Une solution simple est une chaîne de caractères d'IDs de tâches séparés par des virgules.
+  // Une solution relationnelle (plus propre) nécessiterait une table de jointure (TaskDependencies).
+  // Pour l'instant, on garde simple :
+  dependencies String?          @db.Text // ex: "taskid1,taskid2"
+
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@index([projectId])
+  @@index([assigneeId])
+  @@map("tasks")
+}
